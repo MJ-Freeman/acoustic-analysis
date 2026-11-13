@@ -1,0 +1,291 @@
+---
+title: "Acoustic Monitoring on Railways"
+subtitle: "Comparing sample data from the UK, Spain and Portugal"
+format: html
+editor: visual
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+#  Introduction
+
+This report presents an exploratory analysis of acoustic monitoring data collected along railway networks across three countries: UK, Spain and Portugal. Acoustic devices were distributed at three sites per country, with three sensors per site. The devices were located on a mixture of farmland, fen (wetland), woodland, and Mediterranean ago-forestry.\
+
+The analysis explores differences in recording effort and the diversity and distribution of species detected through acoustic monitoring. In particular, it examines the number of unique recordings collected in each country, the total recording effort, and the extent to which detected species are shared between countries or are recorded exclusively within one country.
+
+Note: More to be added on species patterns, dominance, peak recording times and model confidence.\
+
+
+```{r}
+library(dplyr)
+library(readr)
+library(ggplot2)
+read_country_data <- function(folder) {
+files <- list.files(
+path = folder,
+pattern = "\\.csv$",
+recursive = TRUE,
+full.names = TRUE
+)
+data <- lapply(files, read_csv, show_col_types = FALSE)
+bind_rows(data)
+}
+UKdata <- read_country_data("data/UK")
+ESdata <- read_country_data("data/ES")
+PTdata <- read_country_data("data/PT")
+```
+
+## Recording effort by country
+
+To avoid counting individual species detection's as separate recordings, unique recordings were identified using the combination of device ID and recording date/time.
+
+```{r}
+country_colours <- c(
+"UK" = "#967952",
+"Spain" = "#E8D18A",
+"Portugal" = "#929B68"
+)
+summarise_country <- function(data, country) {
+recording_id <- data[c("device_id", "recording_datetime")]
+recordings <- data[
+!duplicated(recording_id) &
+complete.cases(recording_id),
+]
+durations <- as.numeric(as.character(recordings$duration_s))
+data.frame(
+Country = country,
+Total_recordings = nrow(recordings),
+Total_hours = round(sum(durations, na.rm = TRUE) / 3600, 2)
+)
+}
+country_summary <- bind_rows(
+summarise_country(UKdata, "UK"),
+summarise_country(ESdata, "Spain"),
+summarise_country(PTdata, "Portugal")
+)
+knitr::kable(
+country_summary,
+caption = "Summary of acoustic recording effort by country"
+)
+```
+
+## Number of audio recordings 
+
+```{r}
+ggplot(country_summary,
+aes(x = Country,
+y = Total_recordings,
+fill = Country)) +
+geom_col(width = 0.6) +
+scale_fill_manual(values = country_colours) +
+geom_text(
+aes(label = format(Total_recordings, big.mark = ",")),
+vjust = -0.5
+) +
+labs(
+title = "Number of Audio Recordings by Country",
+x = NULL,
+y = "Number of recordings"
+) +
+theme_minimal() +
+theme(legend.position = "none")
+```
+
+## Total recording hours
+
+```{r}
+ggplot(country_summary,
+aes(x = Country,
+y = Total_hours,
+fill = Country)) +
+geom_col(width = 0.6) +
+scale_fill_manual(values = country_colours) +
+geom_text(
+aes(label = round(Total_hours, 1)),
+vjust = -0.5
+) +
+labs(
+title = "Total Audio Recording Hours by Country",
+x = NULL,
+y = "Total hours"
+) +
+theme_minimal() +
+theme(legend.position = "none")
+```
+
+## Species richness
+
+Species richness was calculated as the number of unique scientific names detected in each country.
+
+```{r}
+UK_names <- unique(na.omit(UKdata$scientific_name))
+ES_names <- unique(na.omit(ESdata$scientific_name))
+PT_names <- unique(na.omit(PTdata$scientific_name))
+species_richness <- data.frame(
+  Country = c("UK", "Spain", "Portugal"),
+  Number_of_species = c(
+    length(UK_names),
+    length(ES_names),
+    length(PT_names)
+  )
+)
+knitr::kable(
+  species_richness,
+  caption = "Number of species detected in each country"
+)
+```
+
+## Species overlap between countries
+
+Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.
+
+```{r}
+shared_all <- Reduce(
+  intersect,
+  list(UK_names, ES_names, PT_names)
+)
+
+UK_Spain_only <- setdiff(
+  intersect(UK_names, ES_names), PT_names
+)
+
+UK_Portugal_only <- setdiff(
+  intersect(UK_names, PT_names), ES_names
+)
+
+Spain_Portugal_only <- setdiff(
+  intersect(ES_names, PT_names), UK_names
+)
+
+UK_only <- setdiff(
+  UK_names, union(ES_names, PT_names)
+)
+
+Spain_only <- setdiff(
+  ES_names, union(UK_names, PT_names)
+)
+
+Portugal_only <- setdiff(
+  PT_names, union(UK_names, ES_names)
+)
+species_overlap <- data.frame(
+  Comparison = c(
+    "Shared by all three",
+    "UK and Spain only",
+    "UK and Portugal only",
+    "Spain and Portugal only",
+    "UK only",
+    "Spain only",
+    "Portugal only"
+  ),
+  Number_of_species = c(
+    length(shared_all),
+    length(UK_Spain_only),
+    length(UK_Portugal_only),
+    length(Spain_Portugal_only),
+    length(UK_only),
+    length(Spain_only),
+    length(Portugal_only)
+  )
+)
+
+knitr::kable(
+  species_overlap,
+  caption = "Distribution of species across the three countries"
+)
+```
+
+## Species comparison table
+
+The following table brings together all identified species, their common names and their distribution across the three countries.
+
+```{r}
+species_comparison <- data.frame(
+  scientific_name = c(
+    shared_all,
+    UK_Spain_only,
+    UK_Portugal_only,
+    Spain_Portugal_only,
+    UK_only,
+    Spain_only,
+    Portugal_only
+  ),
+  Distribution = c(
+    rep("Shared by all three", length(shared_all)),
+    rep("UK and Spain only", length(UK_Spain_only)),
+    rep("UK and Portugal only", length(UK_Portugal_only)),
+    rep("Spain and Portugal only", length(Spain_Portugal_only)),
+    rep("UK only", length(UK_only)),
+    rep("Spain only", length(Spain_only)),
+    rep("Portugal only", length(Portugal_only))
+  )
+)
+UK_species <- unique(
+  UKdata[!is.na(UKdata$scientific_name),
+         c("scientific_name", "common_name")]
+)
+
+ES_species <- unique(
+  ESdata[!is.na(ESdata$scientific_name),
+         c("scientific_name", "common_name")]
+)
+
+PT_species <- unique(
+  PTdata[!is.na(PTdata$scientific_name),
+         c("scientific_name", "common_name")]
+)
+
+all_species <- rbind(UK_species, ES_species, PT_species)
+
+all_species$common_name <- as.character(all_species$common_name)
+
+common_lookup <- aggregate(
+  all_species$common_name,
+  by = list(scientific_name = all_species$scientific_name),
+  FUN = function(x) {
+    x <- unique(x[!is.na(x) & x != ""])
+    if (length(x) == 0) NA_character_
+    else paste(x, collapse = " / ")
+  }
+)
+
+names(common_lookup)[2] <- "common_name"
+species_comparison <- merge(
+  species_comparison,
+  common_lookup,
+  by = "scientific_name",
+  all.x = TRUE
+)
+
+species_comparison <- species_comparison[
+  , c("scientific_name", "common_name", "Distribution")
+]
+knitr::kable(
+  species_comparison,
+  caption = "Species detected across the UK, Spain and Portugal"
+)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

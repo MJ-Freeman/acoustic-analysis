@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Acoustic Monitoring on Railways</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="quarto-main_files/libs/clipboard/clipboard.min.js"></script>
+<script src="quarto-main_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="quarto-main_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="quarto-main_files/libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="quarto-main_files/libs/quarto-html/popper.min.js"></script>
+<script src="quarto-main_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="quarto-main_files/libs/quarto-html/anchor.min.js"></script>
+<link href="quarto-main_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="quarto-main_files/libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="quarto-main_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="quarto-main_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="quarto-main_files/libs/bootstrap/bootstrap-943e08653f4bd8ac7ab9292bfc489267.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Acoustic Monitoring on Railways</h1>
+<p class="subtitle lead">Comparing sample data from the UK, Spain and Portugal</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This report presents an exploratory analysis of acoustic monitoring data collected along railway networks across three countries: UK, Spain and Portugal. Acoustic devices were distributed at three sites per country, with three sensors per site. The devices were located on a mixture of farmland, fen (wetland), woodland, and Mediterranean ago-forestry.<br>
+</p>
+<p>The analysis explores differences in recording effort and the diversity and distribution of species detected through acoustic monitoring. In particular, it examines the number of unique recordings collected in each country, the total recording effort, and the extent to which detected species are shared between countries or are recorded exclusively within one country.</p>
+<p>Note: More to be added on species patterns, dominance, peak recording times and model confidence.<br>
+</p>
+<section id="recording-effort-by-country" class="level2">
+<h2 class="anchored" data-anchor-id="recording-effort-by-country">Recording effort by country</h2>
+<p>To avoid counting individual species detection’s as separate recordings, unique recordings were identified using the combination of device ID and recording date/time.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Summary of acoustic recording effort by country</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Country</th>
+<th style="text-align: right;">Total_recordings</th>
+<th style="text-align: right;">Total_hours</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">UK</td>
+<td style="text-align: right;">142884</td>
+<td style="text-align: right;">2378.07</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spain</td>
+<td style="text-align: right;">47107</td>
+<td style="text-align: right;">785.04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Portugal</td>
+<td style="text-align: right;">72601</td>
+<td style="text-align: right;">1207.31</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="number-of-audio-recordings" class="level2">
+<h2 class="anchored" data-anchor-id="number-of-audio-recordings">Number of audio recordings</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="quarto-main_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="total-recording-hours" class="level2">
+<h2 class="anchored" data-anchor-id="total-recording-hours">Total recording hours</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="quarto-main_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="species-richness" class="level2">
+<h2 class="anchored" data-anchor-id="species-richness">Species richness</h2>
+<p>Species richness was calculated as the number of unique scientific names detected in each country.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Number of species detected in each country</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Country</th>
+<th style="text-align: right;">Number_of_species</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">UK</td>
+<td style="text-align: right;">241</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spain</td>
+<td style="text-align: right;">218</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Portugal</td>
+<td style="text-align: right;">234</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="species-overlap-between-countries" class="level2">
+<h2 class="anchored" data-anchor-id="species-overlap-between-countries">Species overlap between countries</h2>
+<p>Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Distribution of species across the three countries</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Comparison</th>
+<th style="text-align: right;">Number_of_species</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Shared by all three</td>
+<td style="text-align: right;">154</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">UK and Spain only</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">UK and Portugal only</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spain and Portugal only</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">UK only</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spain only</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Portugal only</td>
+<td style="text-align: right;">31</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="species-comparison-table" class="level2">
+<h2 class="anchored" data-anchor-id="species-comparison-table">Species comparison table</h2>
+<p>The following table brings together all identified species, their common names and their distribution across the three countries.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Species detected across the UK, Spain and Portugal</caption>
+<colgroup>
+<col style="width: 36%">
+<col style="width: 34%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">scientific_name</th>
+<th style="text-align: left;">common_name</th>
+<th style="text-align: left;">Distribution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Acanthis cabaret</td>
+<td style="text-align: left;">Lesser Redpoll</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Accipiter gentilis</td>
+<td style="text-align: left;">Northern Goshawk</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Accipiter nisus</td>
+<td style="text-align: left;">Eurasian Sparrowhawk</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Acrocephalus arundinaceus</td>
+<td style="text-align: left;">Great Reed Warbler</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Acrocephalus melanopogon</td>
+<td style="text-align: left;">Moustached Warbler</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Acrocephalus palustris</td>
+<td style="text-align: left;">Marsh Warbler</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Acrocephalus schoenobaenus</td>
+<td style="text-align: left;">Sedge Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Acrocephalus scirpaceus</td>
+<td style="text-align: left;">Eurasian Reed Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Actitis hypoleucos</td>
+<td style="text-align: left;">Common Sandpiper</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aegithalos caudatus</td>
+<td style="text-align: left;">Long-tailed Tit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Aegypius monachus</td>
+<td style="text-align: left;">Cinereous Vulture</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aix galericulata</td>
+<td style="text-align: left;">Mandarin Duck</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alauda arvensis</td>
+<td style="text-align: left;">Eurasian Skylark</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alca torda</td>
+<td style="text-align: left;">Razorbill</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alcedo atthis</td>
+<td style="text-align: left;">Common Kingfisher</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alectoris rufa</td>
+<td style="text-align: left;">Red-legged Partridge</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alopochen aegyptiaca</td>
+<td style="text-align: left;">Egyptian Goose</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anas acuta</td>
+<td style="text-align: left;">Northern Pintail</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Anas crecca</td>
+<td style="text-align: left;">Green-winged Teal</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anas platyrhynchos</td>
+<td style="text-align: left;">Mallard</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Anser albifrons</td>
+<td style="text-align: left;">Greater White-fronted Goose</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anser anser</td>
+<td style="text-align: left;">Graylag Goose</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Anser brachyrhynchus</td>
+<td style="text-align: left;">Pink-footed Goose</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anthus campestris</td>
+<td style="text-align: left;">Tawny Pipit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Anthus petrosus</td>
+<td style="text-align: left;">Rock Pipit</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anthus pratensis</td>
+<td style="text-align: left;">Meadow Pipit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Anthus spinoletta</td>
+<td style="text-align: left;">Water Pipit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Anthus trivialis</td>
+<td style="text-align: left;">Tree Pipit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Apus apus</td>
+<td style="text-align: left;">Common Swift</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Apus melba</td>
+<td style="text-align: left;">Alpine Swift</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Apus pallidus</td>
+<td style="text-align: left;">Pallid Swift</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aquila adalberti</td>
+<td style="text-align: left;">Spanish Eagle</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Aquila chrysaetos</td>
+<td style="text-align: left;">Golden Eagle</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ardea alba</td>
+<td style="text-align: left;">Great Egret</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ardea cinerea</td>
+<td style="text-align: left;">Gray Heron</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ardea purpurea</td>
+<td style="text-align: left;">Purple Heron</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ardeola ralloides</td>
+<td style="text-align: left;">Squacco Heron</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Arenaria interpres</td>
+<td style="text-align: left;">Ruddy Turnstone</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Asio flammeus</td>
+<td style="text-align: left;">Short-eared Owl</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Asio otus</td>
+<td style="text-align: left;">Long-eared Owl</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Athene noctua</td>
+<td style="text-align: left;">Little Owl</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aythya collaris</td>
+<td style="text-align: left;">Ring-necked Duck</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Aythya ferina</td>
+<td style="text-align: left;">Common Pochard</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aythya fuligula</td>
+<td style="text-align: left;">Tufted Duck</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bombycilla garrulus</td>
+<td style="text-align: left;">Bohemian Waxwing</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Botaurus stellaris</td>
+<td style="text-align: left;">Great Bittern</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Branta bernicla</td>
+<td style="text-align: left;">Brant</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Branta canadensis</td>
+<td style="text-align: left;">Canada Goose</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Branta leucopsis</td>
+<td style="text-align: left;">Barnacle Goose</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bubo bubo</td>
+<td style="text-align: left;">Eurasian Eagle-Owl</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Bubulcus ibis</td>
+<td style="text-align: left;">Cattle Egret</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bucephala clangula</td>
+<td style="text-align: left;">Common Goldeneye</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Burhinus oedicnemus</td>
+<td style="text-align: left;">Eurasian Thick-knee</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Buteo buteo</td>
+<td style="text-align: left;">Common Buzzard</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Calandrella brachydactyla</td>
+<td style="text-align: left;">Greater Short-toed Lark</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Calidris alba</td>
+<td style="text-align: left;">Sanderling</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Calidris alpina</td>
+<td style="text-align: left;">Dunlin</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Calidris canutus</td>
+<td style="text-align: left;">Red Knot</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Calidris ferruginea</td>
+<td style="text-align: left;">Curlew Sandpiper</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Calidris minuta</td>
+<td style="text-align: left;">Little Stint</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Calidris pugnax</td>
+<td style="text-align: left;">Ruff</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Calidris temminckii</td>
+<td style="text-align: left;">Temminck’s Stint</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Calonectris diomedea</td>
+<td style="text-align: left;">Cory’s Shearwater</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Caprimulgus europaeus</td>
+<td style="text-align: left;">Eurasian Nightjar</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Caprimulgus ruficollis</td>
+<td style="text-align: left;">Red-necked Nightjar</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Carduelis carduelis</td>
+<td style="text-align: left;">European Goldfinch</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Carduelis citrinella</td>
+<td style="text-align: left;">Citril Finch</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cecropis daurica</td>
+<td style="text-align: left;">Red-rumped Swallow</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cepphus grylle</td>
+<td style="text-align: left;">Black Guillemot</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Certhia brachydactyla</td>
+<td style="text-align: left;">Short-toed Treecreeper</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Certhia familiaris</td>
+<td style="text-align: left;">Eurasian Treecreeper</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cettia cetti</td>
+<td style="text-align: left;">Cetti’s Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Charadrius alexandrinus</td>
+<td style="text-align: left;">Kentish Plover</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Charadrius dubius</td>
+<td style="text-align: left;">Little Ringed Plover</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Charadrius hiaticula</td>
+<td style="text-align: left;">Common Ringed Plover</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Charadrius morinellus</td>
+<td style="text-align: left;">Eurasian Dotterel</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chlidonias hybrida</td>
+<td style="text-align: left;">Whiskered Tern</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chlidonias niger</td>
+<td style="text-align: left;">Black Tern</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chloris chloris</td>
+<td style="text-align: left;">European Greenfinch</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chroicocephalus genei</td>
+<td style="text-align: left;">Slender-billed Gull</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chroicocephalus ridibundus</td>
+<td style="text-align: left;">Black-headed Gull</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ciconia ciconia</td>
+<td style="text-align: left;">White Stork</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cinclus cinclus</td>
+<td style="text-align: left;">White-throated Dipper</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Circaetus gallicus</td>
+<td style="text-align: left;">Short-toed Snake-Eagle</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Circus aeruginosus</td>
+<td style="text-align: left;">Eurasian Marsh-Harrier</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Circus cyaneus</td>
+<td style="text-align: left;">Hen Harrier</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Circus pygargus</td>
+<td style="text-align: left;">Montagu’s Harrier</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cisticola juncidis</td>
+<td style="text-align: left;">Zitting Cisticola</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Clamator glandarius</td>
+<td style="text-align: left;">Great Spotted Cuckoo</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Clangula hyemalis</td>
+<td style="text-align: left;">Long-tailed Duck</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Coccothraustes coccothraustes</td>
+<td style="text-align: left;">Hawfinch</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Columba livia</td>
+<td style="text-align: left;">Rock Pigeon</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Columba oenas</td>
+<td style="text-align: left;">Stock Dove</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Columba palumbus</td>
+<td style="text-align: left;">Common Wood-Pigeon</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Coracias garrulus</td>
+<td style="text-align: left;">European Roller</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Corvus corax</td>
+<td style="text-align: left;">Common Raven</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Corvus cornix</td>
+<td style="text-align: left;">Hooded Crow</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Corvus corone</td>
+<td style="text-align: left;">Carrion Crow</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Corvus frugilegus</td>
+<td style="text-align: left;">Rook</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Corvus monedula</td>
+<td style="text-align: left;">Eurasian Jackdaw</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Coturnix coturnix</td>
+<td style="text-align: left;">Common Quail</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crex crex</td>
+<td style="text-align: left;">Corn Crake</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cuculus canorus</td>
+<td style="text-align: left;">Common Cuckoo</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Curruca communis</td>
+<td style="text-align: left;">Greater Whitethroat</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Curruca conspicillata</td>
+<td style="text-align: left;">Spectacled Warbler</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Curruca curruca</td>
+<td style="text-align: left;">Lesser Whitethroat</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Curruca hortensis</td>
+<td style="text-align: left;">Western Orphean Warbler</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Curruca iberiae</td>
+<td style="text-align: left;">Western Subalpine Warbler</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Curruca melanocephala</td>
+<td style="text-align: left;">Sardinian Warbler</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Curruca undata</td>
+<td style="text-align: left;">Dartford Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cyanistes caeruleus</td>
+<td style="text-align: left;">Eurasian Blue Tit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cyanopica cooki</td>
+<td style="text-align: left;">Iberian Magpie</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cygnus atratus</td>
+<td style="text-align: left;">Black Swan</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cygnus columbianus</td>
+<td style="text-align: left;">Tundra Swan</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cygnus cygnus</td>
+<td style="text-align: left;">Whooper Swan</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cygnus olor</td>
+<td style="text-align: left;">Mute Swan</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Delichon urbicum</td>
+<td style="text-align: left;">Common House-Martin</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dendrocopos major</td>
+<td style="text-align: left;">Great Spotted Woodpecker</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dendrocoptes medius</td>
+<td style="text-align: left;">Middle Spotted Woodpecker</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Dryobates minor</td>
+<td style="text-align: left;">Lesser Spotted Woodpecker</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dryocopus martius</td>
+<td style="text-align: left;">Black Woodpecker</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Egretta garzetta</td>
+<td style="text-align: left;">Little Egret</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Elanus caeruleus</td>
+<td style="text-align: left;">Black-winged Kite</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Emberiza calandra</td>
+<td style="text-align: left;">Corn Bunting</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Emberiza cia</td>
+<td style="text-align: left;">Rock Bunting</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Emberiza cirlus</td>
+<td style="text-align: left;">Cirl Bunting</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Emberiza citrinella</td>
+<td style="text-align: left;">Yellowhammer</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Emberiza hortulana</td>
+<td style="text-align: left;">Ortolan Bunting</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Emberiza schoeniclus</td>
+<td style="text-align: left;">Reed Bunting</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Erithacus rubecula</td>
+<td style="text-align: left;">European Robin</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Estrilda astrild</td>
+<td style="text-align: left;">Common Waxbill</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Falco columbarius</td>
+<td style="text-align: left;">Merlin</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Falco naumanni</td>
+<td style="text-align: left;">Lesser Kestrel</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Falco peregrinus</td>
+<td style="text-align: left;">Peregrine Falcon</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Falco subbuteo</td>
+<td style="text-align: left;">Eurasian Hobby</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Falco tinnunculus</td>
+<td style="text-align: left;">Eurasian Kestrel</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ficedula albicollis</td>
+<td style="text-align: left;">Collared Flycatcher</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ficedula hypoleuca</td>
+<td style="text-align: left;">European Pied Flycatcher</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fratercula arctica</td>
+<td style="text-align: left;">Atlantic Puffin</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fringilla coelebs</td>
+<td style="text-align: left;">Common Chaffinch</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fringilla montifringilla</td>
+<td style="text-align: left;">Brambling</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fulica atra</td>
+<td style="text-align: left;">Eurasian Coot</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fulmarus glacialis</td>
+<td style="text-align: left;">Northern Fulmar</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Galerida cristata</td>
+<td style="text-align: left;">Crested Lark</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Galerida theklae</td>
+<td style="text-align: left;">Thekla’s Lark</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gallinago gallinago</td>
+<td style="text-align: left;">Common Snipe</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gallinula chloropus</td>
+<td style="text-align: left;">Eurasian Moorhen</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Garrulus glandarius</td>
+<td style="text-align: left;">Eurasian Jay</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gavia arctica</td>
+<td style="text-align: left;">Arctic Loon</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gavia immer</td>
+<td style="text-align: left;">Common Loon</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gavia stellata</td>
+<td style="text-align: left;">Red-throated Loon</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gelochelidon nilotica</td>
+<td style="text-align: left;">Gull-billed Tern</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Grus grus</td>
+<td style="text-align: left;">Common Crane</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gyps fulvus</td>
+<td style="text-align: left;">Eurasian Griffon</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Haematopus ostralegus</td>
+<td style="text-align: left;">Eurasian Oystercatcher</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hieraaetus pennatus</td>
+<td style="text-align: left;">Booted Eagle</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Himantopus himantopus</td>
+<td style="text-align: left;">Black-winged Stilt</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hippolais icterina</td>
+<td style="text-align: left;">Icterine Warbler</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hippolais polyglotta</td>
+<td style="text-align: left;">Melodious Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hirundo rustica</td>
+<td style="text-align: left;">Barn Swallow</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hydrobates leucorhous</td>
+<td style="text-align: left;">Leach’s Storm-Petrel</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hydrocoloeus minutus</td>
+<td style="text-align: left;">Little Gull</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hydroprogne caspia</td>
+<td style="text-align: left;">Caspian Tern</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ichthyaetus melanocephalus</td>
+<td style="text-align: left;">Mediterranean Gull</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Iduna opaca</td>
+<td style="text-align: left;">Western Olivaceous Warbler</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ixobrychus minutus</td>
+<td style="text-align: left;">Little Bittern</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jynx torquilla</td>
+<td style="text-align: left;">Eurasian Wryneck</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lagopus lagopus</td>
+<td style="text-align: left;">Willow Ptarmigan</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lanius collurio</td>
+<td style="text-align: left;">Red-backed Shrike</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lanius meridionalis</td>
+<td style="text-align: left;">Iberian Gray Shrike</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lanius senator</td>
+<td style="text-align: left;">Woodchat Shrike</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Larus argentatus</td>
+<td style="text-align: left;">Herring Gull</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Larus cachinnans</td>
+<td style="text-align: left;">Caspian Gull</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Larus canus</td>
+<td style="text-align: left;">Common Gull</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Larus delawarensis</td>
+<td style="text-align: left;">Ring-billed Gull</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Larus fuscus</td>
+<td style="text-align: left;">Lesser Black-backed Gull</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Larus marinus</td>
+<td style="text-align: left;">Great Black-backed Gull</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Larus michahellis</td>
+<td style="text-align: left;">Yellow-legged Gull</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Limnodromus scolopaceus</td>
+<td style="text-align: left;">Long-billed Dowitcher</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Limosa lapponica</td>
+<td style="text-align: left;">Bar-tailed Godwit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Limosa limosa</td>
+<td style="text-align: left;">Black-tailed Godwit</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Linaria cannabina</td>
+<td style="text-align: left;">Eurasian Linnet</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Locustella luscinioides</td>
+<td style="text-align: left;">Savi’s Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Locustella naevia</td>
+<td style="text-align: left;">Common Grasshopper-Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lophophanes cristatus</td>
+<td style="text-align: left;">Crested Tit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Loxia curvirostra</td>
+<td style="text-align: left;">Red Crossbill</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lullula arborea</td>
+<td style="text-align: left;">Wood Lark</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Luscinia megarhynchos</td>
+<td style="text-align: left;">Common Nightingale</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Luscinia svecica</td>
+<td style="text-align: left;">Bluethroat</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lymnocryptes minimus</td>
+<td style="text-align: left;">Jack Snipe</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mareca americana</td>
+<td style="text-align: left;">American Wigeon</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mareca penelope</td>
+<td style="text-align: left;">Eurasian Wigeon</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mareca strepera</td>
+<td style="text-align: left;">Gadwall</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Melanitta fusca</td>
+<td style="text-align: left;">Velvet Scoter</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Melanitta nigra</td>
+<td style="text-align: left;">Common Scoter</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Melanocorypha calandra</td>
+<td style="text-align: left;">Calandra Lark</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mergellus albellus</td>
+<td style="text-align: left;">Smew</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mergus merganser</td>
+<td style="text-align: left;">Common Merganser</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mergus serrator</td>
+<td style="text-align: left;">Red-breasted Merganser</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Merops apiaster</td>
+<td style="text-align: left;">European Bee-eater</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Milvus migrans</td>
+<td style="text-align: left;">Black Kite</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Milvus milvus</td>
+<td style="text-align: left;">Red Kite</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Monticola solitarius</td>
+<td style="text-align: left;">Blue Rock-Thrush</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Morus bassanus</td>
+<td style="text-align: left;">Northern Gannet</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Motacilla alba</td>
+<td style="text-align: left;">White Wagtail</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Motacilla cinerea</td>
+<td style="text-align: left;">Gray Wagtail</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Motacilla flava</td>
+<td style="text-align: left;">Western Yellow Wagtail</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Muscicapa striata</td>
+<td style="text-align: left;">Spotted Flycatcher</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Myiopsitta monachus</td>
+<td style="text-align: left;">Monk Parakeet</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Netta rufina</td>
+<td style="text-align: left;">Red-crested Pochard</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Numenius arquata</td>
+<td style="text-align: left;">Eurasian Curlew</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Numenius phaeopus</td>
+<td style="text-align: left;">Whimbrel</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nycticorax nycticorax</td>
+<td style="text-align: left;">Black-crowned Night-Heron</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oenanthe hispanica</td>
+<td style="text-align: left;">Western Black-eared Wheatear</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Oenanthe leucura</td>
+<td style="text-align: left;">Black Wheatear</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Oenanthe oenanthe</td>
+<td style="text-align: left;">Northern Wheatear</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Oriolus oriolus</td>
+<td style="text-align: left;">Eurasian Golden Oriole</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Otus scops</td>
+<td style="text-align: left;">Eurasian Scops-Owl</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pandion haliaetus</td>
+<td style="text-align: left;">Osprey</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Panurus biarmicus</td>
+<td style="text-align: left;">Bearded Reedling</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Parus major</td>
+<td style="text-align: left;">Great Tit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Passer domesticus</td>
+<td style="text-align: left;">House Sparrow</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Passer hispaniolensis</td>
+<td style="text-align: left;">Spanish Sparrow</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Passer montanus</td>
+<td style="text-align: left;">Eurasian Tree Sparrow</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Perdix perdix</td>
+<td style="text-align: left;">Gray Partridge</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Periparus ater</td>
+<td style="text-align: left;">Coal Tit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pernis apivorus</td>
+<td style="text-align: left;">European Honey-buzzard</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Petronia petronia</td>
+<td style="text-align: left;">Rock Sparrow</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Phalacrocorax carbo</td>
+<td style="text-align: left;">Great Cormorant</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Phasianus colchicus</td>
+<td style="text-align: left;">Ring-necked Pheasant</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Phoenicopterus roseus</td>
+<td style="text-align: left;">Greater Flamingo</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Phoenicurus ochruros</td>
+<td style="text-align: left;">Black Redstart</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Phoenicurus phoenicurus</td>
+<td style="text-align: left;">Common Redstart</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Phylloscopus bonelli</td>
+<td style="text-align: left;">Western Bonelli’s Warbler</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Phylloscopus collybita</td>
+<td style="text-align: left;">Common Chiffchaff</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Phylloscopus ibericus</td>
+<td style="text-align: left;">Iberian Chiffchaff</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Phylloscopus inornatus</td>
+<td style="text-align: left;">Yellow-browed Warbler</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Phylloscopus sibilatrix</td>
+<td style="text-align: left;">Wood Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Phylloscopus trochilus</td>
+<td style="text-align: left;">Willow Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pica pica</td>
+<td style="text-align: left;">Eurasian Magpie</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Picus sharpei</td>
+<td style="text-align: left;">Iberian Green Woodpecker</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Picus viridis</td>
+<td style="text-align: left;">Eurasian Green Woodpecker</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Platalea leucorodia</td>
+<td style="text-align: left;">Eurasian Spoonbill</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Plectrophenax nivalis</td>
+<td style="text-align: left;">Snow Bunting</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Plegadis falcinellus</td>
+<td style="text-align: left;">Glossy Ibis</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pluvialis apricaria</td>
+<td style="text-align: left;">European Golden-Plover</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pluvialis squatarola</td>
+<td style="text-align: left;">Black-bellied Plover</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Podiceps auritus</td>
+<td style="text-align: left;">Horned Grebe</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Podiceps cristatus</td>
+<td style="text-align: left;">Great Crested Grebe</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Podiceps nigricollis</td>
+<td style="text-align: left;">Eared Grebe</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Podilymbus podiceps</td>
+<td style="text-align: left;">Pied-billed Grebe</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Poecile palustris</td>
+<td style="text-align: left;">Marsh Tit</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Porphyrio porphyrio</td>
+<td style="text-align: left;">Western Swamphen</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Porzana porzana</td>
+<td style="text-align: left;">Spotted Crake</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Prunella collaris</td>
+<td style="text-align: left;">Alpine Accentor</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Prunella modularis</td>
+<td style="text-align: left;">Dunnock</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Psittacula krameri</td>
+<td style="text-align: left;">Rose-ringed Parakeet</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pterocles alchata</td>
+<td style="text-align: left;">Pin-tailed Sandgrouse</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Ptyonoprogne rupestris</td>
+<td style="text-align: left;">Eurasian Crag-Martin</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Puffinus puffinus</td>
+<td style="text-align: left;">Manx Shearwater</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pyrrhocorax graculus</td>
+<td style="text-align: left;">Yellow-billed Chough</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pyrrhocorax pyrrhocorax</td>
+<td style="text-align: left;">Red-billed Chough</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pyrrhula pyrrhula</td>
+<td style="text-align: left;">Eurasian Bullfinch</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rallus aquaticus</td>
+<td style="text-align: left;">Water Rail</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Recurvirostra avosetta</td>
+<td style="text-align: left;">Pied Avocet</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Regulus ignicapilla</td>
+<td style="text-align: left;">Common Firecrest</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Regulus regulus</td>
+<td style="text-align: left;">Goldcrest</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Remiz pendulinus</td>
+<td style="text-align: left;">Eurasian Penduline-Tit</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Riparia riparia</td>
+<td style="text-align: left;">Bank Swallow</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Rissa tridactyla</td>
+<td style="text-align: left;">Black-legged Kittiwake</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Saxicola rubetra</td>
+<td style="text-align: left;">Whinchat</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Saxicola rubicola</td>
+<td style="text-align: left;">European Stonechat</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Scolopax rusticola</td>
+<td style="text-align: left;">Eurasian Woodcock</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Serinus serinus</td>
+<td style="text-align: left;">European Serin</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sitta europaea</td>
+<td style="text-align: left;">Eurasian Nuthatch</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Somateria mollissima</td>
+<td style="text-align: left;">Common Eider</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Spatula clypeata</td>
+<td style="text-align: left;">Northern Shoveler</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spatula discors</td>
+<td style="text-align: left;">Blue-winged Teal</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Spatula querquedula</td>
+<td style="text-align: left;">Garganey</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Spinus spinus</td>
+<td style="text-align: left;">Eurasian Siskin</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Stercorarius parasiticus</td>
+<td style="text-align: left;">Parasitic Jaeger</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Stercorarius skua</td>
+<td style="text-align: left;">Great Skua</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sterna dougallii</td>
+<td style="text-align: left;">Roseate Tern</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sterna hirundo</td>
+<td style="text-align: left;">Common Tern</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sterna paradisaea</td>
+<td style="text-align: left;">Arctic Tern</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sternula albifrons</td>
+<td style="text-align: left;">Little Tern</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Streptopelia decaocto</td>
+<td style="text-align: left;">Eurasian Collared-Dove</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Streptopelia turtur</td>
+<td style="text-align: left;">European Turtle-Dove</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Strix aluco</td>
+<td style="text-align: left;">Tawny Owl</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sturnus unicolor</td>
+<td style="text-align: left;">Spotless Starling</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sturnus vulgaris</td>
+<td style="text-align: left;">European Starling</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sylvia atricapilla</td>
+<td style="text-align: left;">Eurasian Blackcap</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sylvia borin</td>
+<td style="text-align: left;">Garden Warbler</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tachybaptus ruficollis</td>
+<td style="text-align: left;">Little Grebe</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tadorna tadorna</td>
+<td style="text-align: left;">Common Shelduck</td>
+<td style="text-align: left;">UK and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tetrax tetrax</td>
+<td style="text-align: left;">Little Bustard</td>
+<td style="text-align: left;">Portugal only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Thalasseus sandvicensis</td>
+<td style="text-align: left;">Sandwich Tern</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tringa erythropus</td>
+<td style="text-align: left;">Spotted Redshank</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tringa glareola</td>
+<td style="text-align: left;">Wood Sandpiper</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tringa nebularia</td>
+<td style="text-align: left;">Common Greenshank</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Tringa ochropus</td>
+<td style="text-align: left;">Green Sandpiper</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tringa totanus</td>
+<td style="text-align: left;">Common Redshank</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Troglodytes troglodytes</td>
+<td style="text-align: left;">Eurasian Wren</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turdus iliacus</td>
+<td style="text-align: left;">Redwing</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Turdus merula</td>
+<td style="text-align: left;">Eurasian Blackbird</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turdus philomelos</td>
+<td style="text-align: left;">Song Thrush</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Turdus pilaris</td>
+<td style="text-align: left;">Fieldfare</td>
+<td style="text-align: left;">UK and Spain only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Turdus torquatus</td>
+<td style="text-align: left;">Ring Ouzel</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Turdus viscivorus</td>
+<td style="text-align: left;">Mistle Thrush</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Tyto alba</td>
+<td style="text-align: left;">Barn Owl</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Upupa epops</td>
+<td style="text-align: left;">Eurasian Hoopoe</td>
+<td style="text-align: left;">Spain and Portugal only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Uria aalge</td>
+<td style="text-align: left;">Common Murre</td>
+<td style="text-align: left;">UK only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Vanellus vanellus</td>
+<td style="text-align: left;">Northern Lapwing</td>
+<td style="text-align: left;">Shared by all three</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Zapornia parva</td>
+<td style="text-align: left;">Little Crake</td>
+<td style="text-align: left;">Spain only</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
