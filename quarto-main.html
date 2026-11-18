@@ -75,9 +75,7 @@ ul.task-list li input[type="checkbox"] {
 <h1>Introduction</h1>
 <p>This report presents an exploratory analysis of acoustic monitoring data collected along railway networks across three countries: UK, Spain and Portugal. Acoustic devices were distributed at three sites per country, with three sensors per site. The devices were located on a mixture of farmland, fen (wetland), woodland, and Mediterranean ago-forestry.<br>
 </p>
-<p>The analysis explores differences in recording effort and the diversity and distribution of species detected through acoustic monitoring. In particular, it examines the number of unique recordings collected in each country, the total recording effort, and the extent to which detected species are shared between countries or are recorded exclusively within one country.</p>
-<p>Note: More to be added on species patterns, dominance, peak recording times and model confidence.<br>
-</p>
+<p>The analysis explores differences in recording effort and the diversity and distribution of species detected through acoustic monitoring. In particular, it examines the number of unique recordings collected in each country, the total recording effort, and the extent to which detected species are shared between countries or are recorded exclusively within one country. We also explore patterns in species detections, including the most frequently detected species, peak recording times and model confidence.</p>
 <section id="recording-effort-by-country" class="level2">
 <h2 class="anchored" data-anchor-id="recording-effort-by-country">Recording effort by country</h2>
 <p>To avoid counting individual species detection’s as separate recordings, unique recordings were identified using the combination of device ID and recording date/time.</p>
@@ -170,7 +168,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="species-overlap-between-countries" class="level2">
 <h2 class="anchored" data-anchor-id="species-overlap-between-countries">Species overlap between countries</h2>
-<p>Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.</p>
+<p>Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.A species comparison table can be found in the appendix detailng all identified species, their common names and their distribution across the three countries</p>
 <div class="cell">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -214,6 +212,23 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </div>
 </div>
+</section>
+<section id="species-dominance" class="level2">
+<h2 class="anchored" data-anchor-id="species-dominance">Species dominance</h2>
+<p>To explore which bird species were most commonly detected by the acoustic monitoring devices, we counted the number of detection records for each species in each country. We then identified the ten most frequently detected species for the UK, Spain and Portugal. The chart shows what percentage of all identified species detection records in each country came from these ten species.</p>
+<p>It is important to note that the number of recordings does not necessarily reflect how many individual birds are present. Some species may be recorded more often because they call more frequently, are easier to detect, or because of differences in recording conditions. These results therefore show patterns in acoustic detections rather than actual bird population sizes.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="quarto-main_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="1248"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="appendix" class="level2">
+<h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
 </section>
 <section id="species-comparison-table" class="level2">
 <h2 class="anchored" data-anchor-id="species-comparison-table">Species comparison table</h2>

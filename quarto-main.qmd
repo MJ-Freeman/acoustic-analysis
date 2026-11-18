@@ -13,9 +13,9 @@ execute:
 
 This report presents an exploratory analysis of acoustic monitoring data collected along railway networks across three countries: UK, Spain and Portugal. Acoustic devices were distributed at three sites per country, with three sensors per site. The devices were located on a mixture of farmland, fen (wetland), woodland, and Mediterranean ago-forestry.\
 
-The analysis explores differences in recording effort and the diversity and distribution of species detected through acoustic monitoring. In particular, it examines the number of unique recordings collected in each country, the total recording effort, and the extent to which detected species are shared between countries or are recorded exclusively within one country.
+The analysis explores differences in recording effort and the diversity and distribution of species detected through acoustic monitoring. In particular, it examines the number of unique recordings collected in each country, the total recording effort, and the extent to which detected species are shared between countries or are recorded exclusively within one country. We also explore patterns in species detections, including the most frequently detected species, peak recording times and model confidence.
 
-Note: More to be added on species patterns, dominance, peak recording times and model confidence.\
+
 
 
 ```{r}
@@ -139,7 +139,7 @@ knitr::kable(
 
 ## Species overlap between countries
 
-Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.
+Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.A species comparison table can be found in the appendix detailng all identified species, their common names and their distribution across the three countries
 
 ```{r}
 shared_all <- Reduce(
@@ -195,33 +195,7 @@ knitr::kable(
   species_overlap,
   caption = "Distribution of species across the three countries"
 )
-```
 
-## Species comparison table
-
-The following table brings together all identified species, their common names and their distribution across the three countries.
-
-```{r}
-species_comparison <- data.frame(
-  scientific_name = c(
-    shared_all,
-    UK_Spain_only,
-    UK_Portugal_only,
-    Spain_Portugal_only,
-    UK_only,
-    Spain_only,
-    Portugal_only
-  ),
-  Distribution = c(
-    rep("Shared by all three", length(shared_all)),
-    rep("UK and Spain only", length(UK_Spain_only)),
-    rep("UK and Portugal only", length(UK_Portugal_only)),
-    rep("Spain and Portugal only", length(Spain_Portugal_only)),
-    rep("UK only", length(UK_only)),
-    rep("Spain only", length(Spain_only)),
-    rep("Portugal only", length(Portugal_only))
-  )
-)
 UK_species <- unique(
   UKdata[!is.na(UKdata$scientific_name),
          c("scientific_name", "common_name")]
@@ -252,6 +226,145 @@ common_lookup <- aggregate(
 )
 
 names(common_lookup)[2] <- "common_name"
+```
+
+## Species dominance 
+
+To explore which bird species were most commonly detected by the acoustic monitoring devices, we counted the number of detection records for each species in each country. We then identified the ten most frequently detected species for the UK, Spain and Portugal. The chart shows what percentage of all identified species detection records in each country came from these ten species. 
+
+It is important to note that the number of recordings does not necessarily reflect how many individual birds are present. Some species may be recorded more often because they call more frequently, are easier to detect, or because of differences in recording conditions. These results therefore show patterns in acoustic detections rather than actual bird population sizes.
+
+```{r, fig.width=13, fig.height=8}
+UK_detection_counts <- UKdata %>%
+  filter(!is.na(scientific_name), 
+         scientific_name != "") %>%
+  group_by(scientific_name) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+) %>%
+  mutate(Country = "UK")
+
+ES_detection_counts <- ESdata %>%
+  filter(!is.na(scientific_name), 
+         scientific_name != "") %>%
+  group_by(scientific_name) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+) %>%
+  mutate(Country = "Spain")
+
+PT_detection_counts <- PTdata %>%
+  filter(!is.na(scientific_name), 
+         scientific_name != "") %>%
+  group_by(scientific_name) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+) %>%
+  mutate(Country = "Portugal")
+
+species_records <- bind_rows(
+  UK_detection_counts,
+  ES_detection_counts,
+  PT_detection_counts
+)
+
+species_records <- species_records %>%
+  left_join(common_lookup, by = 
+              "scientific_name") %>%
+  mutate(
+    Species_label = ifelse(
+      !is.na(common_name) &
+        common_name !="",
+      common_name,
+      scientific_name
+    )
+  )
+
+species_dominance <- species_records %>%
+  group_by(Country) %>%
+  mutate(
+    Percentage_of_records = round(
+      100 * Detection_records / 
+        sum(Detection_records), 
+      2
+),
+Rank = min_rank(desc(Detection_records))
+) %>%
+  ungroup()
+
+top_species <- species_dominance %>%
+  group_by(Country) %>%
+  slice_max(
+    order_by = Detection_records,
+    n = 10,
+    with_ties = FALSE
+) %>%
+  ungroup() %>%
+  arrange(Country, Rank)
+
+
+ggplot(
+  top_species,
+  aes(
+    x = Percentage_of_records,
+    y = reorder(Species_label, Percentage_of_records),
+    fill = Country
+  )
+) +
+  geom_col() +
+  facet_wrap(~Country, scales = "free_y") +
+  scale_fill_manual(
+    values = c(
+      "UK" = "#967952",
+      "Spain" = "#E8D18A",
+      "Portugal" = "#929B68"
+    )
+  ) +
+  labs(
+    title = "Most Frequently Detected Species",
+    subtitle = "Top 10 species by percentage of detections in each country",
+    x = "Percentage of species detections (%)",
+    y = "Species"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold")
+  )
+```
+
+
+## Appendix
+
+## Species comparison table
+
+The following table brings together all identified species, their common names and their distribution across the three countries.
+
+```{r}
+species_comparison <- data.frame(
+  scientific_name = c(
+    shared_all,
+    UK_Spain_only,
+    UK_Portugal_only,
+    Spain_Portugal_only,
+    UK_only,
+    Spain_only,
+    Portugal_only
+  ),
+  Distribution = c(
+    rep("Shared by all three", length(shared_all)),
+    rep("UK and Spain only", length(UK_Spain_only)),
+    rep("UK and Portugal only", length(UK_Portugal_only)),
+    rep("Spain and Portugal only", length(Spain_Portugal_only)),
+    rep("UK only", length(UK_only)),
+    rep("Spain only", length(Spain_only)),
+    rep("Portugal only", length(Portugal_only))
+  )
+)
+
 species_comparison <- merge(
   species_comparison,
   common_lookup,
@@ -267,7 +380,6 @@ knitr::kable(
   caption = "Species detected across the UK, Spain and Portugal"
 )
 ```
-
 
 
 
