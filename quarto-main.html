@@ -110,9 +110,8 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </div>
 </div>
-</section>
-<section id="number-of-audio-recordings" class="level2">
-<h2 class="anchored" data-anchor-id="number-of-audio-recordings">Number of audio recordings</h2>
+<section id="number-of-audio-recordings" class="level3">
+<h3 class="anchored" data-anchor-id="number-of-audio-recordings">Number of audio recordings</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -123,8 +122,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
-<section id="total-recording-hours" class="level2">
-<h2 class="anchored" data-anchor-id="total-recording-hours">Total recording hours</h2>
+<section id="total-recording-hours" class="level3">
+<h3 class="anchored" data-anchor-id="total-recording-hours">Total recording hours</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -134,6 +133,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+</section>
 </section>
 <section id="species-richness" class="level2">
 <h2 class="anchored" data-anchor-id="species-richness">Species richness</h2>
@@ -165,9 +165,8 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </div>
 </div>
-</section>
-<section id="species-overlap-between-countries" class="level2">
-<h2 class="anchored" data-anchor-id="species-overlap-between-countries">Species overlap between countries</h2>
+<section id="species-overlap-between-countries" class="level3">
+<h3 class="anchored" data-anchor-id="species-overlap-between-countries">Species overlap between countries</h3>
 <p>Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.A species comparison table can be found in the appendix detailng all identified species, their common names and their distribution across the three countries</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -213,6 +212,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
+</section>
 <section id="species-dominance" class="level2">
 <h2 class="anchored" data-anchor-id="species-dominance">Species dominance</h2>
 <p>To explore which bird species were most commonly detected by the acoustic monitoring devices, we counted the number of detection records for each species in each country. We then identified the ten most frequently detected species for the UK, Spain and Portugal. The chart shows what percentage of all identified species detection records in each country came from these ten species.</p>
@@ -227,11 +227,46 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
+<section id="species-id-confidence" class="level2">
+<h2 class="anchored" data-anchor-id="species-id-confidence">Species ID confidence</h2>
+<p>The acoustic monitoring data include a confidence score for each species detection instance. This score indicates how confident the identificaton model was in its classification, with higher scores indicating greater confidence in the predicted species ID. Numerical scores range from 0.25 to 1, and detections are assigned a ‘high’ or ‘low’ confidence flag dependant on their numerical score.</p>
+<p>It is important to distinguish model confidence from identification accuracy. A high confidence score does not necessarily mean that the species ID is correct, and a low score does not necessarily mean its incorrect. The scores simply provide an indication of how certain the model was about its prediction as the species detected have not been independently verified.</p>
+<p>The following visualisations explore how the confidence scores vary between the countries and also amoung some of the most frequently detected species.</p>
+<section id="confidence-scores-across-countries" class="level3">
+<h3 class="anchored" data-anchor-id="confidence-scores-across-countries">Confidence scores across countries</h3>
+<p>The boxplot compares the distribution of model confidence scores across the UK, Spain and Portugal.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="quarto-main_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="confidence-scores-for-the-top-three-dominant-species" class="level3">
+<h3 class="anchored" data-anchor-id="confidence-scores-for-the-top-three-dominant-species">Confidence scores for the top three dominant species</h3>
+<p>To explore confidence variance within species, we looked at the three most detected species in each country (identified in the previous section on species dominance). The stacked bars show the percentage of detections assigned ‘high’ and ‘low’ confidence flags for each species. The number alongside each bar indicated the total number of detections of the species in that country.</p>
+<p>This comparison highlights that there is variance in the confidence scores within single species, even among those detected frequently. It also allows us to compare the confidence associated with the same species across different countries, as is the case for the European Bee-eater which was in the top three dominant species for Spain and Portugal.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="quarto-main_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Overall, confidence score distributions were broadly similar across the three countries, although Portugal had a slightly higher median score.</p>
+<p>Among the most frequently detected species, the proportion of high-confidence flags varied. However, it’s interesting to see that the European Bee-eater’s confidence was consistent between Spain and Portugal with 81% and 80% of detections flagged as ‘high’ confidence.</p>
+<p>These patterns show that the model confidence can vary between species as well as between individual detections. This could relate to species-specific vocalisations, recording conditions, or other factors.</p>
+</section>
+</section>
 <section id="appendix" class="level2">
 <h2 class="anchored" data-anchor-id="appendix">Appendix</h2>
-</section>
-<section id="species-comparison-table" class="level2">
-<h2 class="anchored" data-anchor-id="species-comparison-table">Species comparison table</h2>
+<section id="species-comparison-table" class="level3">
+<h3 class="anchored" data-anchor-id="species-comparison-table">Species comparison table</h3>
 <p>The following table brings together all identified species, their common names and their distribution across the three countries.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -1824,6 +1859,7 @@ ul.task-list li input[type="checkbox"] {
 </table>
 </div>
 </div>
+</section>
 </section>
 </section>
 

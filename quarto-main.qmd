@@ -15,9 +15,6 @@ This report presents an exploratory analysis of acoustic monitoring data collect
 
 The analysis explores differences in recording effort and the diversity and distribution of species detected through acoustic monitoring. In particular, it examines the number of unique recordings collected in each country, the total recording effort, and the extent to which detected species are shared between countries or are recorded exclusively within one country. We also explore patterns in species detections, including the most frequently detected species, peak recording times and model confidence.
 
-
-
-
 ```{r}
 library(dplyr)
 library(readr)
@@ -35,6 +32,13 @@ bind_rows(data)
 UKdata <- read_country_data("data/UK")
 ESdata <- read_country_data("data/ES")
 PTdata <- read_country_data("data/PT")
+
+confidence_data <- dplyr::bind_rows(
+  UKdata %>% dplyr::mutate(Country = "UK"),
+  ESdata %>% dplyr::mutate(Country = "Spain"),
+  PTdata %>% dplyr::mutate(Country = "Portugal")
+)
+
 ```
 
 ## Recording effort by country
@@ -71,7 +75,7 @@ caption = "Summary of acoustic recording effort by country"
 )
 ```
 
-## Number of audio recordings 
+### Number of audio recordings 
 
 ```{r}
 ggplot(country_summary,
@@ -93,7 +97,7 @@ theme_minimal() +
 theme(legend.position = "none")
 ```
 
-## Total recording hours
+### Total recording hours
 
 ```{r}
 ggplot(country_summary,
@@ -137,7 +141,7 @@ knitr::kable(
 )
 ```
 
-## Species overlap between countries
+### Species overlap between countries
 
 Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.A species comparison table can be found in the appendix detailng all identified species, their common names and their distribution across the three countries
 
@@ -336,10 +340,191 @@ ggplot(
   )
 ```
 
+## Species ID confidence 
+
+The acoustic monitoring data include a confidence score for each species detection instance. This score indicates how confident the identificaton model was in its classification, with higher scores indicating greater confidence in the predicted species ID. Numerical scores range from 0.25 to 1, and detections are assigned a 'high' or 'low' confidence flag dependant on their numerical score. 
+
+It is important to distinguish model confidence from identification accuracy. A high confidence score does not necessarily mean that the species ID is correct, and a low score does not necessarily mean its incorrect. The scores simply provide an indication of how certain the model was about its prediction as the species detected have not been independently verified. 
+
+The following visualisations explore how the confidence scores vary between the countries and also amoung some of the most frequently detected species.
+
+### Confidence scores across countries 
+
+The boxplot compares the distribution of model confidence scores across the UK, Spain and Portugal. 
+
+```{r}
+ggplot(
+  confidence_data %>%
+    dplyr::filter(!is.na(confidence)),
+  aes(x = Country, y = confidence, fill = Country)
+) +
+  geom_boxplot(outlier.shape = NA) +
+  scale_fill_manual(values = country_colours) +
+  labs(
+    title = "Model Confidence Scores Across Countries",
+    x = "Country",
+    y = "Confidence score"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+### Confidence scores for the top three dominant species 
+
+To explore confidence variance within species, we looked at the three most detected species in each country (identified in the previous section on species dominance). The stacked bars show the percentage of detections assigned 'high' and 'low' confidence flags for each species. The number alongside each bar indicated the total number of detections of the species in that country.
+
+This comparison highlights that there is variance in the confidence scores within single species, even among those detected frequently. It also allows us to compare the confidence associated with the same species across different countries, as is the case for the European Bee-eater which was in the top three dominant species for Spain and Portugal. 
+
+```{r}
+top_three_species <- top_species %>%
+  dplyr::group_by(Country) %>%
+  dplyr::slice_min(
+    order_by = Rank,
+    n = 3,
+    with_ties = FALSE
+  ) %>%
+  dplyr::ungroup()
+
+top_three_confidence <- confidence_data %>%
+  dplyr::filter(
+    !is.na(scientific_name),
+    !is.na(confidence_flag)
+  ) %>%
+  dplyr::inner_join(
+    top_three_species %>%
+      dplyr::select(
+        Country,
+        scientific_name,
+        Rank
+      ),
+    by = c("Country", "scientific_name")
+  ) %>%
+  dplyr::group_by(
+    Country,
+    scientific_name,
+    common_name,
+    Rank
+  ) %>%
+  dplyr::summarise(
+    Total_classified_detections = dplyr::n(),
+    High_detections = sum(confidence_flag == "high"),
+    Low_detections = sum(confidence_flag == "low"),
+    High_confidence_percentage = round(
+      100 * High_detections / 
+        Total_classified_detections, 1),
+    Low_confidence_percentage = round(
+      100 * Low_detections / 
+        Total_classified_detections, 1),
+    .groups = "drop"
+  ) %>%
+  dplyr::arrange(Country, Rank)
+
+```
+
+```{r}
+species_order <- top_three_confidence %>%
+  dplyr::arrange(dplyr::desc(Rank)) %>%
+  dplyr::pull(common_name) %>%
+  unique()
+
+confidence_plot_data <- top_three_confidence %>%
+  dplyr::mutate(
+    Low_confidence_percentage =
+      100 - High_confidence_percentage
+  ) %>%
+  dplyr::select(
+    Country,
+    common_name,
+    Rank,
+    Total_classified_detections,
+    High_confidence_percentage,
+    Low_confidence_percentage
+  ) %>%
+tidyr::pivot_longer(
+    cols = c(
+      High_confidence_percentage,
+      Low_confidence_percentage),
+    names_to = "Confidence",
+    values_to = "Percentage"
+  ) %>%
+dplyr::mutate(
+    Confidence = dplyr::recode(
+      Confidence,
+      "High_confidence_percentage" = "High",
+      "Low_confidence_percentage" = "Low"
+    ),
+    common_name = factor(
+      common_name,
+      levels = species_order
+    ),
+    Fill_group = ifelse(
+      Confidence == "Low",
+      "Low",
+      Country)
+  )
+
+ggplot(
+  confidence_plot_data,
+  aes(
+    x = Percentage,
+    y = common_name,
+    fill = Fill_group)
+) +
+  geom_col(width = 0.7) +
+  geom_text(
+    aes(label = paste0(round(Percentage), "%")),
+    position = position_stack(vjust = 0.5),
+    size = 3
+  ) +
+  geom_text(
+    data = top_three_confidence,
+    aes(
+      x = 103,
+      y = factor(common_name, levels = species_order),
+      label = paste0(
+        "n = ",
+        format(Total_classified_detections, big.mark = ",")
+      )
+    ),
+    inherit.aes = FALSE,
+    size = 3
+  ) +
+  facet_wrap(
+    ~Country,
+    ncol = 1,
+    scales = "free_y"
+  ) +
+  scale_fill_manual(
+    values = c(country_colours,
+      "Low" = "#E5E1D8"
+    ),
+    guide = "none"
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, 100, 20),
+    limits = c(0, 125)
+  ) +
+  labs(
+    title = "Confidence Scores for the Three Most Frequently Detected Species",
+    x = "Percentage of classified detections",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    panel.grid.major.y = element_blank()
+  )
+```
+
+Overall, confidence score distributions were broadly similar across the three countries, although Portugal had a slightly higher median score. 
+
+Among the most frequently detected species, the proportion of high-confidence flags varied. However, it's interesting to see that the European Bee-eater's confidence was consistent between Spain and Portugal with 81% and 80% of detections flagged as 'high' confidence. 
+
+These patterns show that the model confidence can vary between species as well as between individual detections. This could relate to species-specific vocalisations, recording conditions, or other factors. 
 
 ## Appendix
 
-## Species comparison table
+### Species comparison table
 
 The following table brings together all identified species, their common names and their distribution across the three countries.
 
