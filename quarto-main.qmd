@@ -19,6 +19,8 @@ The analysis explores differences in recording effort and the diversity and dist
 library(dplyr)
 library(readr)
 library(ggplot2)
+library(lubridate)
+
 read_country_data <- function(folder) {
 files <- list.files(
 path = folder,
@@ -521,6 +523,117 @@ Overall, confidence score distributions were broadly similar across the three co
 Among the most frequently detected species, the proportion of high-confidence flags varied. However, it's interesting to see that the European Bee-eater's confidence was consistent between Spain and Portugal with 81% and 80% of detections flagged as 'high' confidence. 
 
 These patterns show that the model confidence can vary between species as well as between individual detections. This could relate to species-specific vocalisations, recording conditions, or other factors. 
+
+## Peak detection times 
+
+To explore when bird species were most frequently detected, we examined the number of identified detection records across the hour of each day. The results are presented using UTC timestamps to allow for comparison between countries.
+
+The highest number of detections occurred between 05:00-06:00 in the UK, 07:00-08:00 in Portugal and 08:00-09:00 in Spain.
+
+The UK recorded more detections overall, including a particularly pronounced early-morning peak. However, the is relative to the higher total recording in the UK in terms of recording hours. Differences in detection totals therefore do not necessarily indicate differences in bird abundance or activity between countries. 
+
+```{r, include=FALSE}
+time_data <- dplyr::bind_rows(
+  UKdata %>% dplyr::mutate(Country = "UK"),
+  ESdata %>% dplyr::mutate(Country = "Spain"),
+  PTdata %>% dplyr::mutate(Country = "Portugal")
+) %>%
+  dplyr::filter(
+    !is.na(recording_datetime),
+    !is.na(scientific_name),
+    scientific_name !=""
+  ) %>%
+  dplyr::mutate(
+    Hour = 
+      lubridate::hour(recording_datetime)
+  )
+
+hourly_detections <- time_data %>%
+  dplyr::count(Country, Hour, name = "Total_detections") %>%
+  dplyr::arrange(Country, Hour)
+
+hourly_detections %>%
+  dplyr::group_by(Country) %>%
+  dplyr::slice_max(
+    order_by = Total_detections,
+    n = 1,
+    with_ties = TRUE
+  ) %>%
+  dplyr::ungroup()
+```
+```{r}
+ggplot(
+  hourly_detections,
+  aes(
+    x = Hour,
+    y = Total_detections,
+    colour = Country)
+) +
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 2) +
+  scale_colour_manual(values = country_colours) +
+  scale_x_continuous(
+    breaks = 0:23,
+    labels = sprintf("%02d:00", 0:23)
+  ) +
+  labs(
+    title = "24-Hour Pattern of Bird Detections",
+    x = "Hour of day (UTC)",
+    y = "Number of detection records",
+    colour = "Country"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1)
+  )
+```
+
+We also examined the peak detection times of the three most frequently detected species in each country. Interestingly, these did not coincide with the overall country-level peak times, suggesting that overall daily patterns reflect detections across a wider range of species.
+
+```{r}
+top_species_time <- time_data %>%
+  dplyr::inner_join(
+    top_three_species %>%
+      dplyr::select(
+        Country,
+        scientific_name,
+        Rank),
+    by = c("Country", "scientific_name")
+  ) %>%
+  dplyr::count(
+    Country,
+    common_name,
+    Rank,
+    Hour,
+    name = "Total_detections"
+  ) %>%
+  dplyr::arrange(Country, Rank, Hour)
+
+top_species_peak_table <- top_species_time %>%
+  dplyr::group_by(Country, common_name) %>%
+  dplyr::summarise(
+    Total_detections = sum(Total_detections),
+    Peak_hour = Hour[which.max(Total_detections)],
+    Peak_detections = max(Total_detections),
+    .groups = "drop"
+  ) %>%
+  dplyr::mutate(
+    Peak_time = 
+      paste0(Peak_hour,
+             ":00-", Peak_hour +1, ":00")
+    ) %>%
+  dplyr::arrange(Country,
+                 desc(Total_detections)) %>%
+  dplyr::select(Country, common_name, Peak_time)
+
+knitr::kable(
+  top_species_peak_table, 
+  col.names = c("Country", "Species", "Peak detection time (UTC)")
+)
+```
+
 
 ## Appendix
 
