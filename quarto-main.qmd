@@ -1,12 +1,15 @@
 ---
 title: "Acoustic Monitoring on Railways"
 subtitle: "Comparing sample data from the UK, Spain and Portugal"
-format: html
+format: 
+  html:
+    embed-resources: true
 editor: visual
 execute:
   echo: false
   warning: false
   message: false
+  freeze: auto
 ---
 
 #  Introduction
@@ -20,6 +23,7 @@ library(dplyr)
 library(readr)
 library(ggplot2)
 library(lubridate)
+library(tidytext)
 
 read_country_data <- function(folder) {
 files <- list.files(
@@ -31,14 +35,26 @@ full.names = TRUE
 data <- lapply(files, read_csv, show_col_types = FALSE)
 bind_rows(data)
 }
+
 UKdata <- read_country_data("data/UK")
 ESdata <- read_country_data("data/ES")
 PTdata <- read_country_data("data/PT")
+
+UKbat <- read_country_data("data/Bat/UK")
+ESbat <- read_country_data("data/Bat/ES")
+PTbat <- read_country_data("data/Bat/PT")
+
 
 confidence_data <- dplyr::bind_rows(
   UKdata %>% dplyr::mutate(Country = "UK"),
   ESdata %>% dplyr::mutate(Country = "Spain"),
   PTdata %>% dplyr::mutate(Country = "Portugal")
+)
+
+country_colours <- c(
+"UK" = "#967952",
+"Spain" = "#E8D18A",
+"Portugal" = "#929B68"
 )
 
 ```
@@ -47,12 +63,9 @@ confidence_data <- dplyr::bind_rows(
 
 To avoid counting individual species detection's as separate recordings, unique recordings were identified using the combination of device ID and recording date/time.
 
+### Recording effort for birds
+
 ```{r}
-country_colours <- c(
-"UK" = "#967952",
-"Spain" = "#E8D18A",
-"Portugal" = "#929B68"
-)
 summarise_country <- function(data, country) {
 recording_id <- data[c("device_id", "recording_datetime")]
 recordings <- data[
@@ -66,64 +79,39 @@ Total_recordings = nrow(recordings),
 Total_hours = round(sum(durations, na.rm = TRUE) / 3600, 2)
 )
 }
+
 country_summary <- bind_rows(
 summarise_country(UKdata, "UK"),
 summarise_country(ESdata, "Spain"),
 summarise_country(PTdata, "Portugal")
 )
+
 knitr::kable(
 country_summary,
-caption = "Summary of acoustic recording effort by country"
+caption = "Summary of acoustic recording effort by country (birds)"
 )
 ```
 
-### Number of audio recordings 
+### Recording effort for bats
 
 ```{r}
-ggplot(country_summary,
-aes(x = Country,
-y = Total_recordings,
-fill = Country)) +
-geom_col(width = 0.6) +
-scale_fill_manual(values = country_colours) +
-geom_text(
-aes(label = format(Total_recordings, big.mark = ",")),
-vjust = -0.5
-) +
-labs(
-title = "Number of Audio Recordings by Country",
-x = NULL,
-y = "Number of recordings"
-) +
-theme_minimal() +
-theme(legend.position = "none")
-```
+country_batsummary <- bind_rows(
+summarise_country(UKbat, "UK"),
+summarise_country(ESbat, "Spain"),
+summarise_country(PTbat, "Portugal")
+)
 
-### Total recording hours
-
-```{r}
-ggplot(country_summary,
-aes(x = Country,
-y = Total_hours,
-fill = Country)) +
-geom_col(width = 0.6) +
-scale_fill_manual(values = country_colours) +
-geom_text(
-aes(label = round(Total_hours, 1)),
-vjust = -0.5
-) +
-labs(
-title = "Total Audio Recording Hours by Country",
-x = NULL,
-y = "Total hours"
-) +
-theme_minimal() +
-theme(legend.position = "none")
+knitr::kable(
+country_batsummary,
+caption = "Summary of acoustic recording effort by country (bats)"
+)
 ```
 
 ## Species richness
 
-Species richness was calculated as the number of unique scientific names detected in each country.
+Species richness was calculated as the number of unique scientific names detected in each country. Bat species richness tbc. The number of bird species was relatively similar across the three countries as shown below. 
+
+A full list of bird and bat species can be found in the appendix.
 
 ```{r}
 UK_names <- unique(na.omit(UKdata$scientific_name))
@@ -137,15 +125,35 @@ species_richness <- data.frame(
     length(PT_names)
   )
 )
-knitr::kable(
+
+ggplot(
   species_richness,
-  caption = "Number of species detected in each country"
-)
+  aes(
+    x = Country,
+    y = Number_of_species,
+    fill = Country
+  )
+) +
+  geom_col(width = 0.6) +
+  geom_text(
+    aes(label = Number_of_species),
+    vjust = -0.5
+  ) +
+  scale_fill_manual(values = country_colours) +
+  labs(
+    title = "Number of Bird Species Detected by Country",
+    x = NULL,
+    y = "Number of species"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none"
+  )
 ```
 
 ### Species overlap between countries
 
-Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.A species comparison table can be found in the appendix detailng all identified species, their common names and their distribution across the three countries
+Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.A species comparison table can be found in the appendix detailing all identified species, their common names and their distribution across the three countries
 
 ```{r}
 shared_all <- Reduce(
@@ -236,9 +244,9 @@ names(common_lookup)[2] <- "common_name"
 
 ## Species dominance 
 
-To explore which bird species were most commonly detected by the acoustic monitoring devices, we counted the number of detection records for each species in each country. We then identified the ten most frequently detected species for the UK, Spain and Portugal. The chart shows what percentage of all identified species detection records in each country came from these ten species. 
+To explore which species were most commonly detected by the acoustic monitoring devices, we counted the number of detection records for each species in each country. We then identified the five most frequently detected species for the UK, Spain and Portugal. The charts show what percentage of all identified species detection records in each country came from these five species. 
 
-It is important to note that the number of recordings does not necessarily reflect how many individual birds are present. Some species may be recorded more often because they call more frequently, are easier to detect, or because of differences in recording conditions. These results therefore show patterns in acoustic detections rather than actual bird population sizes.
+It is important to note that the number of recordings does not necessarily reflect how many individual species are present. Some species may be recorded more often because they call more frequently, are easier to detect, or because of differences in recording conditions. These results therefore show patterns in acoustic detections rather than actual population sizes.
 
 ```{r, fig.width=13, fig.height=8}
 UK_detection_counts <- UKdata %>%
@@ -305,7 +313,7 @@ top_species <- species_dominance %>%
   group_by(Country) %>%
   slice_max(
     order_by = Detection_records,
-    n = 10,
+    n = 5,
     with_ties = FALSE
 ) %>%
   ungroup() %>%
@@ -316,22 +324,19 @@ ggplot(
   top_species,
   aes(
     x = Percentage_of_records,
-    y = reorder(Species_label, Percentage_of_records),
+    y = tidytext::reorder_within(Species_label, Percentage_of_records, Country),
     fill = Country
   )
 ) +
   geom_col() +
   facet_wrap(~Country, scales = "free_y") +
   scale_fill_manual(
-    values = c(
-      "UK" = "#967952",
-      "Spain" = "#E8D18A",
-      "Portugal" = "#929B68"
-    )
+    values = c(country_colours)
   ) +
+  tidytext::scale_y_reordered() +
   labs(
-    title = "Most Frequently Detected Species",
-    subtitle = "Top 10 species by percentage of detections in each country",
+    title = "Most Frequently Detected Bird Species",
+    subtitle = "Top 5 species by percentage of detections in each country",
     x = "Percentage of species detections (%)",
     y = "Species"
   ) +
@@ -341,6 +346,135 @@ ggplot(
     strip.text = element_text(face = "bold")
   )
 ```
+
+Species dominance for Bats *to be updated using data from the additional model
+
+```{r, fig.width=13, fig.height=8}
+
+UK_bat_detection_counts <- UKbat %>%
+  filter(
+    !is.na(species),
+    species != ""
+  ) %>%
+  group_by(species) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(Country = "UK")
+
+
+ES_bat_detection_counts <- ESbat %>%
+  filter(
+    !is.na(species),
+    species != ""
+  ) %>%
+  group_by(species) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(Country = "Spain")
+
+
+PT_bat_detection_counts <- PTbat %>%
+  filter(
+    !is.na(species),
+    species != ""
+  ) %>%
+  group_by(species) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(Country = "Portugal")
+
+batspecies_records <- bind_rows(
+  UK_bat_detection_counts,
+  ES_bat_detection_counts,
+  PT_bat_detection_counts
+)
+
+bat_common_lookup <- bind_rows(
+  UKbat,
+  ESbat,
+  PTbat
+) %>%
+  select(species, common_name) %>%
+  filter(
+    !is.na(species),
+    !is.na(common_name),
+    common_name != ""
+  ) %>%
+  distinct(species, .keep_all = TRUE)
+
+batspecies_records <- batspecies_records %>%
+  left_join(
+    bat_common_lookup,
+    by = "species"
+  ) %>%
+  mutate(
+    Species_label = ifelse(
+      !is.na(common_name) & common_name != "",
+      common_name,
+      species
+    )
+  )
+
+batspecies_dominance <- batspecies_records %>%
+  group_by(Country) %>%
+  mutate(
+    Percentage_of_records = round(
+      100 * Detection_records /
+        sum(Detection_records),
+      2
+    ),
+    Rank = min_rank(desc(Detection_records))
+  ) %>%
+  ungroup()
+
+top_batspecies <- batspecies_dominance %>%
+  group_by(Country) %>%
+  slice_max(
+    order_by = Detection_records,
+    n = 5,
+    with_ties = FALSE
+  ) %>%
+  ungroup() %>%
+  arrange(Country, Rank)
+
+ggplot(
+  top_batspecies,
+  aes(
+    x = Percentage_of_records,
+    y = tidytext::reorder_within(
+      Species_label,
+      Percentage_of_records,
+      Country
+    ),
+    fill = Country
+  )
+) +
+  geom_col() +
+  facet_wrap(~Country, scales = "free_y") +
+  scale_fill_manual(
+    values = country_colours
+  ) +
+  tidytext::scale_y_reordered() +
+  labs(
+    title = "Most Frequently Detected Bat Species",
+    subtitle = "Top 5 species by percentage of detections in each country",
+    x = "Percentage of species detections (%)",
+    y = "Species"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold")
+  )
+
+```
+
 
 ## Species ID confidence 
 
