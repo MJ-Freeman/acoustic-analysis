@@ -1,0 +1,835 @@
+---
+title: "Acoustic Monitoring on Railways"
+subtitle: "Comparing sample data from the UK, Spain and Portugal"
+format: 
+  html:
+    embed-resources: true
+editor: visual
+execute:
+  echo: false
+  warning: false
+  message: false
+  freeze: auto
+---
+
+#  Introduction
+
+This report presents an exploratory analysis of acoustic monitoring data collected along railway networks across three countries: UK, Spain and Portugal. Acoustic devices were distributed at three sites per country, with three sensors per site. The devices were located on a mixture of farmland, fen (wetland), woodland, and Mediterranean ago-forestry.\
+
+The analysis explores differences in recording effort and the diversity and distribution of species detected through acoustic monitoring. In particular, it examines the number of unique recordings collected in each country, the total recording effort, and the extent to which detected species are shared between countries or are recorded exclusively within one country. We also explore patterns in species detections, including the most frequently detected species, peak recording times and model confidence.
+
+```{r}
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(lubridate)
+library(tidytext)
+
+read_country_data <- function(folder) {
+files <- list.files(
+path = folder,
+pattern = "\\.csv$",
+recursive = TRUE,
+full.names = TRUE
+)
+data <- lapply(files, read_csv, show_col_types = FALSE)
+bind_rows(data)
+}
+
+UKdata <- read_country_data("data/UK")
+ESdata <- read_country_data("data/ES")
+PTdata <- read_country_data("data/PT")
+
+UKbat <- read_country_data("data/Bat/UK")
+ESbat <- read_country_data("data/Bat/ES")
+PTbat <- read_country_data("data/Bat/PT")
+
+
+confidence_data <- dplyr::bind_rows(
+  UKdata %>% dplyr::mutate(Country = "UK"),
+  ESdata %>% dplyr::mutate(Country = "Spain"),
+  PTdata %>% dplyr::mutate(Country = "Portugal")
+)
+
+country_colours <- c(
+"UK" = "#967952",
+"Spain" = "#E8D18A",
+"Portugal" = "#929B68"
+)
+
+```
+
+## Recording effort by country
+
+To avoid counting individual species detection's as separate recordings, unique recordings were identified using the combination of device ID and recording date/time.
+
+### Recording effort for birds
+
+```{r}
+summarise_country <- function(data, country) {
+recording_id <- data[c("device_id", "recording_datetime")]
+recordings <- data[
+!duplicated(recording_id) &
+complete.cases(recording_id),
+]
+durations <- as.numeric(as.character(recordings$duration_s))
+data.frame(
+Country = country,
+Total_recordings = nrow(recordings),
+Total_hours = round(sum(durations, na.rm = TRUE) / 3600, 2)
+)
+}
+
+country_summary <- bind_rows(
+summarise_country(UKdata, "UK"),
+summarise_country(ESdata, "Spain"),
+summarise_country(PTdata, "Portugal")
+)
+
+knitr::kable(
+country_summary,
+caption = "Summary of acoustic recording effort by country (birds)"
+)
+```
+
+### Recording effort for bats
+
+```{r}
+country_batsummary <- bind_rows(
+summarise_country(UKbat, "UK"),
+summarise_country(ESbat, "Spain"),
+summarise_country(PTbat, "Portugal")
+)
+
+knitr::kable(
+country_batsummary,
+caption = "Summary of acoustic recording effort by country (bats)"
+)
+```
+
+## Species richness
+
+Species richness was calculated as the number of unique scientific names detected in each country. Bat species richness tbc. The number of bird species was relatively similar across the three countries as shown below. 
+
+A full list of bird and bat species can be found in the appendix.
+
+```{r}
+UK_names <- unique(na.omit(UKdata$scientific_name))
+ES_names <- unique(na.omit(ESdata$scientific_name))
+PT_names <- unique(na.omit(PTdata$scientific_name))
+species_richness <- data.frame(
+  Country = c("UK", "Spain", "Portugal"),
+  Number_of_species = c(
+    length(UK_names),
+    length(ES_names),
+    length(PT_names)
+  )
+)
+
+ggplot(
+  species_richness,
+  aes(
+    x = Country,
+    y = Number_of_species,
+    fill = Country
+  )
+) +
+  geom_col(width = 0.6) +
+  geom_text(
+    aes(label = Number_of_species),
+    vjust = -0.5
+  ) +
+  scale_fill_manual(values = country_colours) +
+  labs(
+    title = "Number of Bird Species Detected by Country",
+    x = NULL,
+    y = "Number of species"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none"
+  )
+```
+
+### Species overlap between countries
+
+Species were compared between countries using their scientific names. Each species was assigned to one of seven mutually exclusive distribution groups.A species comparison table can be found in the appendix detailing all identified species, their common names and their distribution across the three countries
+
+```{r}
+shared_all <- Reduce(
+  intersect,
+  list(UK_names, ES_names, PT_names)
+)
+
+UK_Spain_only <- setdiff(
+  intersect(UK_names, ES_names), PT_names
+)
+
+UK_Portugal_only <- setdiff(
+  intersect(UK_names, PT_names), ES_names
+)
+
+Spain_Portugal_only <- setdiff(
+  intersect(ES_names, PT_names), UK_names
+)
+
+UK_only <- setdiff(
+  UK_names, union(ES_names, PT_names)
+)
+
+Spain_only <- setdiff(
+  ES_names, union(UK_names, PT_names)
+)
+
+Portugal_only <- setdiff(
+  PT_names, union(UK_names, ES_names)
+)
+species_overlap <- data.frame(
+  Comparison = c(
+    "Shared by all three",
+    "UK and Spain only",
+    "UK and Portugal only",
+    "Spain and Portugal only",
+    "UK only",
+    "Spain only",
+    "Portugal only"
+  ),
+  Number_of_species = c(
+    length(shared_all),
+    length(UK_Spain_only),
+    length(UK_Portugal_only),
+    length(Spain_Portugal_only),
+    length(UK_only),
+    length(Spain_only),
+    length(Portugal_only)
+  )
+)
+
+knitr::kable(
+  species_overlap,
+  caption = "Distribution of species across the three countries"
+)
+
+UK_species <- unique(
+  UKdata[!is.na(UKdata$scientific_name),
+         c("scientific_name", "common_name")]
+)
+
+ES_species <- unique(
+  ESdata[!is.na(ESdata$scientific_name),
+         c("scientific_name", "common_name")]
+)
+
+PT_species <- unique(
+  PTdata[!is.na(PTdata$scientific_name),
+         c("scientific_name", "common_name")]
+)
+
+all_species <- rbind(UK_species, ES_species, PT_species)
+
+all_species$common_name <- as.character(all_species$common_name)
+
+common_lookup <- aggregate(
+  all_species$common_name,
+  by = list(scientific_name = all_species$scientific_name),
+  FUN = function(x) {
+    x <- unique(x[!is.na(x) & x != ""])
+    if (length(x) == 0) NA_character_
+    else paste(x, collapse = " / ")
+  }
+)
+
+names(common_lookup)[2] <- "common_name"
+```
+
+## Species dominance 
+
+To explore which species were most commonly detected by the acoustic monitoring devices, we counted the number of detection records for each species in each country. We then identified the five most frequently detected species for the UK, Spain and Portugal. The charts show what percentage of all identified species detection records in each country came from these five species. 
+
+It is important to note that the number of recordings does not necessarily reflect how many individual species are present. Some species may be recorded more often because they call more frequently, are easier to detect, or because of differences in recording conditions. These results therefore show patterns in acoustic detections rather than actual population sizes.
+
+```{r, fig.width=13, fig.height=8}
+UK_detection_counts <- UKdata %>%
+  filter(!is.na(scientific_name), 
+         scientific_name != "") %>%
+  group_by(scientific_name) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+) %>%
+  mutate(Country = "UK")
+
+ES_detection_counts <- ESdata %>%
+  filter(!is.na(scientific_name), 
+         scientific_name != "") %>%
+  group_by(scientific_name) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+) %>%
+  mutate(Country = "Spain")
+
+PT_detection_counts <- PTdata %>%
+  filter(!is.na(scientific_name), 
+         scientific_name != "") %>%
+  group_by(scientific_name) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+) %>%
+  mutate(Country = "Portugal")
+
+species_records <- bind_rows(
+  UK_detection_counts,
+  ES_detection_counts,
+  PT_detection_counts
+)
+
+species_records <- species_records %>%
+  left_join(common_lookup, by = 
+              "scientific_name") %>%
+  mutate(
+    Species_label = ifelse(
+      !is.na(common_name) &
+        common_name !="",
+      common_name,
+      scientific_name
+    )
+  )
+
+species_dominance <- species_records %>%
+  group_by(Country) %>%
+  mutate(
+    Percentage_of_records = round(
+      100 * Detection_records / 
+        sum(Detection_records), 
+      2
+),
+Rank = min_rank(desc(Detection_records))
+) %>%
+  ungroup()
+
+top_species <- species_dominance %>%
+  group_by(Country) %>%
+  slice_max(
+    order_by = Detection_records,
+    n = 5,
+    with_ties = FALSE
+) %>%
+  ungroup() %>%
+  arrange(Country, Rank)
+
+
+ggplot(
+  top_species,
+  aes(
+    x = Percentage_of_records,
+    y = tidytext::reorder_within(Species_label, Percentage_of_records, Country),
+    fill = Country
+  )
+) +
+  geom_col() +
+  facet_wrap(~Country, scales = "free_y") +
+  scale_fill_manual(
+    values = c(country_colours)
+  ) +
+  tidytext::scale_y_reordered() +
+  labs(
+    title = "Most Frequently Detected Bird Species",
+    subtitle = "Top 5 species by percentage of detections in each country",
+    x = "Percentage of species detections (%)",
+    y = "Species"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold")
+  )
+```
+
+Species dominance for Bats *to be updated using data from the additional model
+
+```{r, fig.width=13, fig.height=8}
+
+UK_bat_detection_counts <- UKbat %>%
+  filter(
+    !is.na(species),
+    species != ""
+  ) %>%
+  group_by(species) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(Country = "UK")
+
+
+ES_bat_detection_counts <- ESbat %>%
+  filter(
+    !is.na(species),
+    species != ""
+  ) %>%
+  group_by(species) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(Country = "Spain")
+
+
+PT_bat_detection_counts <- PTbat %>%
+  filter(
+    !is.na(species),
+    species != ""
+  ) %>%
+  group_by(species) %>%
+  summarise(
+    Detection_records = n(),
+    .groups = "drop"
+  ) %>%
+  mutate(Country = "Portugal")
+
+batspecies_records <- bind_rows(
+  UK_bat_detection_counts,
+  ES_bat_detection_counts,
+  PT_bat_detection_counts
+)
+
+bat_common_lookup <- bind_rows(
+  UKbat,
+  ESbat,
+  PTbat
+) %>%
+  select(species, common_name) %>%
+  filter(
+    !is.na(species),
+    !is.na(common_name),
+    common_name != ""
+  ) %>%
+  distinct(species, .keep_all = TRUE)
+
+batspecies_records <- batspecies_records %>%
+  left_join(
+    bat_common_lookup,
+    by = "species"
+  ) %>%
+  mutate(
+    Species_label = ifelse(
+      !is.na(common_name) & common_name != "",
+      common_name,
+      species
+    )
+  )
+
+batspecies_dominance <- batspecies_records %>%
+  group_by(Country) %>%
+  mutate(
+    Percentage_of_records = round(
+      100 * Detection_records /
+        sum(Detection_records),
+      2
+    ),
+    Rank = min_rank(desc(Detection_records))
+  ) %>%
+  ungroup()
+
+top_batspecies <- batspecies_dominance %>%
+  group_by(Country) %>%
+  slice_max(
+    order_by = Detection_records,
+    n = 5,
+    with_ties = FALSE
+  ) %>%
+  ungroup() %>%
+  arrange(Country, Rank)
+
+ggplot(
+  top_batspecies,
+  aes(
+    x = Percentage_of_records,
+    y = tidytext::reorder_within(
+      Species_label,
+      Percentage_of_records,
+      Country
+    ),
+    fill = Country
+  )
+) +
+  geom_col() +
+  facet_wrap(~Country, scales = "free_y") +
+  scale_fill_manual(
+    values = country_colours
+  ) +
+  tidytext::scale_y_reordered() +
+  labs(
+    title = "Most Frequently Detected Bat Species",
+    subtitle = "Top 5 species by percentage of detections in each country",
+    x = "Percentage of species detections (%)",
+    y = "Species"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    strip.text = element_text(face = "bold")
+  )
+
+```
+
+
+## Species ID confidence 
+
+The acoustic monitoring data include a confidence score for each species detection instance. This score indicates how confident the identificaton model was in its classification, with higher scores indicating greater confidence in the predicted species ID. Numerical scores range from 0.25 to 1, and detections are assigned a 'high' or 'low' confidence flag dependant on their numerical score. 
+
+It is important to distinguish model confidence from identification accuracy. A high confidence score does not necessarily mean that the species ID is correct, and a low score does not necessarily mean its incorrect. The scores simply provide an indication of how certain the model was about its prediction as the species detected have not been independently verified. 
+
+The following visualisations explore how the confidence scores vary between the countries and also amoung some of the most frequently detected species.
+
+### Confidence scores across countries 
+
+The boxplot compares the distribution of model confidence scores across the UK, Spain and Portugal. 
+
+```{r}
+ggplot(
+  confidence_data %>%
+    dplyr::filter(!is.na(confidence)),
+  aes(x = Country, y = confidence, fill = Country)
+) +
+  geom_boxplot(outlier.shape = NA) +
+  scale_fill_manual(values = country_colours) +
+  labs(
+    title = "Model Confidence Scores Across Countries",
+    x = "Country",
+    y = "Confidence score"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+### Confidence scores for the top three dominant species 
+
+To explore confidence variance within species, we looked at the three most detected species in each country (identified in the previous section on species dominance). The stacked bars show the percentage of detections assigned 'high' and 'low' confidence flags for each species. The number alongside each bar indicated the total number of detections of the species in that country.
+
+This comparison highlights that there is variance in the confidence scores within single species, even among those detected frequently. It also allows us to compare the confidence associated with the same species across different countries, as is the case for the European Bee-eater which was in the top three dominant species for Spain and Portugal. 
+
+```{r}
+top_three_species <- top_species %>%
+  dplyr::group_by(Country) %>%
+  dplyr::slice_min(
+    order_by = Rank,
+    n = 3,
+    with_ties = FALSE
+  ) %>%
+  dplyr::ungroup()
+
+top_three_confidence <- confidence_data %>%
+  dplyr::filter(
+    !is.na(scientific_name),
+    !is.na(confidence_flag)
+  ) %>%
+  dplyr::inner_join(
+    top_three_species %>%
+      dplyr::select(
+        Country,
+        scientific_name,
+        Rank
+      ),
+    by = c("Country", "scientific_name")
+  ) %>%
+  dplyr::group_by(
+    Country,
+    scientific_name,
+    common_name,
+    Rank
+  ) %>%
+  dplyr::summarise(
+    Total_classified_detections = dplyr::n(),
+    High_detections = sum(confidence_flag == "high"),
+    Low_detections = sum(confidence_flag == "low"),
+    High_confidence_percentage = round(
+      100 * High_detections / 
+        Total_classified_detections, 1),
+    Low_confidence_percentage = round(
+      100 * Low_detections / 
+        Total_classified_detections, 1),
+    .groups = "drop"
+  ) %>%
+  dplyr::arrange(Country, Rank)
+
+```
+
+```{r}
+species_order <- top_three_confidence %>%
+  dplyr::arrange(dplyr::desc(Rank)) %>%
+  dplyr::pull(common_name) %>%
+  unique()
+
+confidence_plot_data <- top_three_confidence %>%
+  dplyr::mutate(
+    Low_confidence_percentage =
+      100 - High_confidence_percentage
+  ) %>%
+  dplyr::select(
+    Country,
+    common_name,
+    Rank,
+    Total_classified_detections,
+    High_confidence_percentage,
+    Low_confidence_percentage
+  ) %>%
+tidyr::pivot_longer(
+    cols = c(
+      High_confidence_percentage,
+      Low_confidence_percentage),
+    names_to = "Confidence",
+    values_to = "Percentage"
+  ) %>%
+dplyr::mutate(
+    Confidence = dplyr::recode(
+      Confidence,
+      "High_confidence_percentage" = "High",
+      "Low_confidence_percentage" = "Low"
+    ),
+    common_name = factor(
+      common_name,
+      levels = species_order
+    ),
+    Fill_group = ifelse(
+      Confidence == "Low",
+      "Low",
+      Country)
+  )
+
+ggplot(
+  confidence_plot_data,
+  aes(
+    x = Percentage,
+    y = common_name,
+    fill = Fill_group)
+) +
+  geom_col(width = 0.7) +
+  geom_text(
+    aes(label = paste0(round(Percentage), "%")),
+    position = position_stack(vjust = 0.5),
+    size = 3
+  ) +
+  geom_text(
+    data = top_three_confidence,
+    aes(
+      x = 103,
+      y = factor(common_name, levels = species_order),
+      label = paste0(
+        "n = ",
+        format(Total_classified_detections, big.mark = ",")
+      )
+    ),
+    inherit.aes = FALSE,
+    size = 3
+  ) +
+  facet_wrap(
+    ~Country,
+    ncol = 1,
+    scales = "free_y"
+  ) +
+  scale_fill_manual(
+    values = c(country_colours,
+      "Low" = "#E5E1D8"
+    ),
+    guide = "none"
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, 100, 20),
+    limits = c(0, 125)
+  ) +
+  labs(
+    title = "Confidence Scores for the Three Most Frequently Detected Species",
+    x = "Percentage of classified detections",
+    y = NULL
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    panel.grid.major.y = element_blank()
+  )
+```
+
+Overall, confidence score distributions were broadly similar across the three countries, although Portugal had a slightly higher median score. 
+
+Among the most frequently detected species, the proportion of high-confidence flags varied. However, it's interesting to see that the European Bee-eater's confidence was consistent between Spain and Portugal with 81% and 80% of detections flagged as 'high' confidence. 
+
+These patterns show that the model confidence can vary between species as well as between individual detections. This could relate to species-specific vocalisations, recording conditions, or other factors. 
+
+## Peak detection times 
+
+To explore when bird species were most frequently detected, we examined the number of identified detection records across the hour of each day. The results are presented using UTC timestamps to allow for comparison between countries.
+
+The highest number of detections occurred between 05:00-06:00 in the UK, 07:00-08:00 in Portugal and 08:00-09:00 in Spain.
+
+The UK recorded more detections overall, including a particularly pronounced early-morning peak. However, the is relative to the higher total recording in the UK in terms of recording hours. Differences in detection totals therefore do not necessarily indicate differences in bird abundance or activity between countries. 
+
+```{r, include=FALSE}
+time_data <- dplyr::bind_rows(
+  UKdata %>% dplyr::mutate(Country = "UK"),
+  ESdata %>% dplyr::mutate(Country = "Spain"),
+  PTdata %>% dplyr::mutate(Country = "Portugal")
+) %>%
+  dplyr::filter(
+    !is.na(recording_datetime),
+    !is.na(scientific_name),
+    scientific_name !=""
+  ) %>%
+  dplyr::mutate(
+    Hour = 
+      lubridate::hour(recording_datetime)
+  )
+
+hourly_detections <- time_data %>%
+  dplyr::count(Country, Hour, name = "Total_detections") %>%
+  dplyr::arrange(Country, Hour)
+
+hourly_detections %>%
+  dplyr::group_by(Country) %>%
+  dplyr::slice_max(
+    order_by = Total_detections,
+    n = 1,
+    with_ties = TRUE
+  ) %>%
+  dplyr::ungroup()
+```
+```{r}
+ggplot(
+  hourly_detections,
+  aes(
+    x = Hour,
+    y = Total_detections,
+    colour = Country)
+) +
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 2) +
+  scale_colour_manual(values = country_colours) +
+  scale_x_continuous(
+    breaks = 0:23,
+    labels = sprintf("%02d:00", 0:23)
+  ) +
+  labs(
+    title = "24-Hour Pattern of Bird Detections",
+    x = "Hour of day (UTC)",
+    y = "Number of detection records",
+    colour = "Country"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1)
+  )
+```
+
+We also examined the peak detection times of the three most frequently detected species in each country. Interestingly, these did not coincide with the overall country-level peak times, suggesting that overall daily patterns reflect detections across a wider range of species.
+
+```{r}
+top_species_time <- time_data %>%
+  dplyr::inner_join(
+    top_three_species %>%
+      dplyr::select(
+        Country,
+        scientific_name,
+        Rank),
+    by = c("Country", "scientific_name")
+  ) %>%
+  dplyr::count(
+    Country,
+    common_name,
+    Rank,
+    Hour,
+    name = "Total_detections"
+  ) %>%
+  dplyr::arrange(Country, Rank, Hour)
+
+top_species_peak_table <- top_species_time %>%
+  dplyr::group_by(Country, common_name) %>%
+  dplyr::summarise(
+    Total_detections = sum(Total_detections),
+    Peak_hour = Hour[which.max(Total_detections)],
+    Peak_detections = max(Total_detections),
+    .groups = "drop"
+  ) %>%
+  dplyr::mutate(
+    Peak_time = 
+      paste0(Peak_hour,
+             ":00-", Peak_hour +1, ":00")
+    ) %>%
+  dplyr::arrange(Country,
+                 desc(Total_detections)) %>%
+  dplyr::select(Country, common_name, Peak_time)
+
+knitr::kable(
+  top_species_peak_table, 
+  col.names = c("Country", "Species", "Peak detection time (UTC)")
+)
+```
+
+
+## Appendix
+
+### Species comparison table
+
+The following table brings together all identified species, their common names and their distribution across the three countries.
+
+```{r}
+species_comparison <- data.frame(
+  scientific_name = c(
+    shared_all,
+    UK_Spain_only,
+    UK_Portugal_only,
+    Spain_Portugal_only,
+    UK_only,
+    Spain_only,
+    Portugal_only
+  ),
+  Distribution = c(
+    rep("Shared by all three", length(shared_all)),
+    rep("UK and Spain only", length(UK_Spain_only)),
+    rep("UK and Portugal only", length(UK_Portugal_only)),
+    rep("Spain and Portugal only", length(Spain_Portugal_only)),
+    rep("UK only", length(UK_only)),
+    rep("Spain only", length(Spain_only)),
+    rep("Portugal only", length(Portugal_only))
+  )
+)
+
+species_comparison <- merge(
+  species_comparison,
+  common_lookup,
+  by = "scientific_name",
+  all.x = TRUE
+)
+
+species_comparison <- species_comparison[
+  , c("scientific_name", "common_name", "Distribution")
+]
+knitr::kable(
+  species_comparison,
+  caption = "Species detected across the UK, Spain and Portugal"
+)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
