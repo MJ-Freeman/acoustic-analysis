@@ -124,7 +124,48 @@ species_distribution <- function(data, species_col) {
 #4. Species dominance
 #------------------------------------------------------------------------------
 
+species_dominance <- function(data,
+                              species_col,
+                              group_vars = "Country") {
+  required_columns <- c(group_vars, species_col)
+  missing_columns <- setdiff(required_columns, names(data))
+  
+  if (length(missing_columns) > 0) {
+    stop(
+      "Missing required columns: ",
+      paste(missing_columns, collapse = ", ")
+    )
+  }
+  results <- data %>%
+    dplyr::filter(!is.na(.data[[species_col]])) %>%
+    dplyr::mutate(Species = .data[[species_col]]) %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(c(group_vars, "Species")))
+    ) %>%
+    dplyr::summarise(
+      Detections = dplyr::n(),
+      .groups = "drop"
+    )
+  results <- results %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(group_vars))
+    ) %>%
+    dplyr::mutate(
+      Total_detections = sum(Detections),
+      Percentage = (Detections / Total_detections) *100,
+      Rank = dplyr::min_rank(dplyr::desc(Detections))
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::arrange(
+      dplyr::across(dplyr::all_of(group_vars)),
+      Rank
+    )
+  return(results)
+}
 
+
+
+#------------------------------------------------------------------------------
 
 
 
