@@ -52,7 +52,7 @@ recording_effort <- function(data, group_vars = c("Country", "device_id")) {
 
 
 #------------------------------------------------------------------------------
-#2. Species richess
+#2. Species richness
 #------------------------------------------------------------------------------
 
 species_richness <- function(data,
@@ -80,6 +80,49 @@ species_richness <- function(data,
 }
 
 
+
+#------------------------------------------------------------------------------
+#3. Species distribution
+#------------------------------------------------------------------------------
+
+species_distribution <- function(data, species_col) {
+  required_columns <- c("Country", species_col)
+  missing_columns <- setdiff(required_columns, names(data))
+  
+  if(length(missing_columns) > 0) {
+    stop(
+      "Missing required columns: ",
+      paste(missing_columns, collapse = ", ")
+    )
+  }
+  results <- data %>%
+    dplyr::filter(
+      !is.na(.data[[species_col]]),
+      !is.na(Country)
+    ) %>%
+    dplyr::distinct(
+      Country,
+      Species = .data[[species_col]]
+    ) %>%
+    dplyr::mutate(Present = TRUE) %>%
+    tidyr::pivot_wider(
+      names_from = Country,
+      values_from = Present,
+      values_fill = FALSE
+    )
+  country_columns <- setdiff(names(results), "Species")
+  results <- results %>% 
+    dplyr::mutate(Number_of_countries = rowSums(
+      dplyr::across(dplyr::all_of(country_columns))
+    ))
+  return(results)
+}
+
+
+
+#------------------------------------------------------------------------------
+#4. Species dominance
+#------------------------------------------------------------------------------
 
 
 
