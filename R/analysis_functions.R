@@ -166,6 +166,42 @@ species_dominance <- function(data,
 
 
 #------------------------------------------------------------------------------
+# Confidence of model ID
+#------------------------------------------------------------------------------
+
+# confidence summary
+
+confidence_summary <- function(data,
+                               score_col,
+                               group_vars = "Country") {
+  required_columns <- c(group_vars, score_col)
+  missing_columns <- setdiff(required_columns, names(data))
+  
+  if (length(missing_columns) > 0) {
+    stop(
+      "Missing required columns: ",
+      paste(missing_columns, collapse = ", ")
+    )
+  }
+  results <- data %>%
+    dplyr::filter(!is.na(.data[[score_col]])) %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(group_vars))
+    ) %>%
+    dplyr::summarise(
+      Number_of_scores = dplyr::n(),
+      Mean_score = mean(.data[[score_col]]),
+      Median_score = median(.data[[score_col]]),
+      SD_score = sd(.data[[score_col]]),
+      Minimum_score = min(.data[[score_col]]),
+      Maximum_score = max(.data[[score_col]]),
+      .groups = "drop"
+    )
+  return(results)
+}
+
+
+
 
 
 
