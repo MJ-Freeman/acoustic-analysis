@@ -52,9 +52,32 @@ recording_effort <- function(data, group_vars = c("Country", "device_id")) {
 
 
 #------------------------------------------------------------------------------
+#2. Species richess
+#------------------------------------------------------------------------------
 
-
-
+species_richness <- function(data,
+                             species_col,
+                             group_vars = "Country") {
+  required_columns <- c(group_vars, species_col)
+  missing_columns <- setdiff(required_columns, names(data))
+  
+  if (length(missing_columns) > 0) {
+    stop(
+      "Missing required columns: ",
+      paste(missing_columns, collapse = ", ")
+    )
+  }
+  results <- data %>%
+    dplyr::filter(!is.na(.data[[species_col]])) %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(group_vars))
+    ) %>%
+    dplyr::summarise(
+      Species_richness = dplyr::n_distinct(.data[[species_col]]),
+      .groups = "drop"
+    )
+  return(results)
+}
 
 
 
