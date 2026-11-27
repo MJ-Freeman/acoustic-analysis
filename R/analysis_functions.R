@@ -217,6 +217,7 @@ confidence_summary <- function(data,
 
 # confidence category - looking at "high", "low" 
 # and "missing" categories where the models have been unable to identify 
+# this category is unavailable in the Bat model output for Spain and Portugal
 
 confidence_category <- function(data,
                                 confidence_col, 
@@ -261,4 +262,77 @@ confidence_category <- function(data,
 
 
 
+# dominant confidence - summarising confidence for most frequently detected sp.
+# calculates: mean, median, sd, min and max scores 
+# as well as % of detections above specified model confidence (0.5)
+
+dominant_confidence <- function(data,
+                                species_col,
+                                score_col,
+                                group_vars = "Country",
+                                top_n = 3,
+                                threshold = 0.5) {
+  required_columns <- c(group_vars, species_col, score_col)
+  missing_columns <- setdiff(required_columns, names(data))
+  
+  if (length(missing_columns) > 0) {
+    stop(
+      "Missing required columns: ",
+      paste(missing_columns, collapse = ", ")
+    )
+  }
+  
+  dominant_species <- species_dominance(
+    data,
+    species_col = species_col,
+    group_vars = group_vars
+  ) %>%
+    dplyr::filter(Rank <= top_n) %>%
+    dplyr::select(
+      dplyr::all_of(group_vars),
+      Species,
+      Rank
+    )
+  
+  results <- data %>%
+    dplyr::filter(
+      !is.na(.data[[species_col]]),
+      !is.na(.data[[score_col]])
+    ) %>%
+    dplyr::mutate(
+      Species = as.character(.data[[species_col]]),
+      Confidence_value = as.numeric(.data[[score_col]])
+    ) %>%
+    dplyr::semi_join(
+      dominant_species, 
+      by = c(group_vars, "Species")
+    ) %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(c(group_vars, "Species")))
+    ) %>%
+    dplyr::summarise(
+      Total_detections = dplyr::n(),
+      Mean_score = mean(Confidence_value),
+      Median_score = median(Confidence_value),
+      SD_score = sd(Confidence_value),
+      Minimum_score = min(Confidence_value),
+      Maximum_score = max(Confidence_value),
+      Above_threshold = sum(Confidence_value >= threshold),
+      Below_threshold = sum(Confidence_value < threshold),
+      .groups = "drop")
+  
+  results <- results %>%
+    dplyr::mutate(
+      Above_percentage = (Above_threshold / Total_detections) * 100,
+      Below_percentage = (Below_threshold / Total_detections) * 100
+    ) %>%
+    dplyr::left_join(
+      dominant_species,
+      by = c(group_vars, "Species")
+    ) %>%
+    dplyr::arrange(dplyr::across(dplyr::all_of(group_vars)),
+                   Rank
+    )
+  return(results)
+}
 
