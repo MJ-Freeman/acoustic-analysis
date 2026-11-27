@@ -15,6 +15,9 @@
 #1. Recording effort
 #------------------------------------------------------------------------------
 
+# looking at total recording instances and total hours of recordings
+
+
 recording_effort <- function(data, group_vars = c("Country", "device_id")) {
   required_columns <- c(
     "Country",
@@ -55,6 +58,9 @@ recording_effort <- function(data, group_vars = c("Country", "device_id")) {
 #2. Species richness
 #------------------------------------------------------------------------------
 
+# looking at the number of unique species 
+
+
 species_richness <- function(data,
                              species_col,
                              group_vars = "Country") {
@@ -84,6 +90,10 @@ species_richness <- function(data,
 #------------------------------------------------------------------------------
 #3. Species distribution
 #------------------------------------------------------------------------------
+
+# looking at distribution of shared and unique species 
+# across countries and devices
+
 
 species_distribution <- function(data, species_col) {
   required_columns <- c("Country", species_col)
@@ -123,6 +133,9 @@ species_distribution <- function(data, species_col) {
 #------------------------------------------------------------------------------
 #4. Species dominance
 #------------------------------------------------------------------------------
+
+# looking at the most frequently detected species
+
 
 species_dominance <- function(data,
                               species_col,
@@ -169,7 +182,7 @@ species_dominance <- function(data,
 # Confidence of model ID
 #------------------------------------------------------------------------------
 
-# confidence summary
+# confidence summary - looking at numerical confidence scores
 
 confidence_summary <- function(data,
                                score_col,
@@ -202,6 +215,49 @@ confidence_summary <- function(data,
 
 
 
+# confidence category - looking at "high", "low" 
+# and "missing" categories where the models have been unable to identify 
+
+confidence_category <- function(data,
+                                confidence_col, 
+                                group_vars = "Country") {
+  required_columns <- c(group_vars, confidence_col)
+  missing_columns <- setdiff(required_columns, names(data))
+  
+  if (length(missing_columns) > 0) {
+    stop(
+      "Missing required columns: ",
+      paste(missing_columns, collapse = ", ")
+    )
+  }
+  results <- data %>%
+    dplyr::mutate(
+      Confidence_category = dplyr::if_else(
+        is.na(.data[[confidence_col]]),
+        "Missing",
+        as.character(.data[[confidence_col]])
+      )
+    ) %>%
+    dplyr::group_by(
+      dplyr::across(
+        dplyr::all_of(c(group_vars, "Confidence_category"))
+      )
+    ) %>%
+    dplyr::summarise(
+      Detections = dplyr::n(),
+      .groups = "drop"
+    )
+  results <- results %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(group_vars))
+    ) %>%
+    dplyr::mutate(
+      Total_detections = sum(Detections),
+      Percentage = (Detections / Total_detections) * 100
+    ) %>%
+    dplyr::ungroup()
+  return(results)
+}
 
 
 
