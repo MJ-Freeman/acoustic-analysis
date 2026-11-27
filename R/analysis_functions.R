@@ -336,3 +336,84 @@ dominant_confidence <- function(data,
   return(results)
 }
 
+
+
+#------------------------------------------------------------------------------
+# Hourly activity
+#------------------------------------------------------------------------------
+
+# hourly activity - looking at activity patterns and peak detection times
+# optional start_hour & end_hour for specific windows (useful for bats)
+
+hourly_activity <- function(data,
+                            datetime_col,
+                            group_vars = "Country",
+                            start_hour = NULL,
+                            end_hour = NULL) {
+  required_columns <- c(group_vars, datetime_col)
+  missing_columns <- setdiff(required_columns, names(data))
+  
+  if (length(missing_columns) > 0) {
+    stop(
+      "Missing required columns: ",
+      paste(missing_columns, collapse = ", ")
+    )
+  }
+  results <- data %>%
+    dplyr::filter(!is.na(.data[[datetime_col]])) %>%
+    dplyr::mutate(
+      Hour = lubridate::hour(.data[[datetime_col]])
+    )
+  
+  if(!is.null(start_hour) && !is.null(end_hour)) {
+    if(start_hour <= end_hour) {
+      results <- results %>%
+        dplyr::filter(Hour >= start_hour, Hour <= end_hour)
+    }else{
+      results <- results %>%
+        dplyr::filter(Hour >= start_hour | Hour <= end_hour)
+    }
+  }
+  results <- results %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(c(group_vars, "Hour")))
+    ) %>%
+    dplyr::summarise(
+      Detections = dplyr::n(),
+      .groups = "drop"
+    ) %>%
+    dplyr::arrange(
+      dplyr::across(dplyr::all_of(group_vars)),
+      Hour
+    )
+  return(results)
+}
+
+
+#dominant activity
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
