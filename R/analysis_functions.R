@@ -390,7 +390,148 @@ hourly_activity <- function(data,
 }
 
 
-#dominant activity
+
+#dominant activity - hourly detection patterns of most frequently detected sp.
+# optional start_hour & end_hour for specific windows (useful for bats)
+
+dominant_activity <- function(data,
+                              datetime_col,
+                              species_col,
+                              group_vars = "Country",
+                              top_n = 3,
+                              start_hour = NULL,
+                              end_hour = NULL) {
+  working_data <- data %>%
+    dplyr::filter(
+      !is.na(.data[[datetime_col]])
+    ) %>%
+    dplyr::mutate(
+      Species = as.character(.data[[species_col]]),
+      Hour = lubridate::hour(.data[[datetime_col]])
+    )
+  
+  if (!is.null(start_hour) && !is.null(end_hour)) {
+    if (start_hour <= end_hour) {
+      working_data <- working_data %>%
+        dplyr::filter(Hour >= start_hour, Hour <= end_hour)
+    } else {
+      working_data <- working_data %>%
+        dplyr::filter(Hour >= start_hour | Hour <= end_hour)
+    }
+  }
+  top_species <- species_dominance(
+    working_data,
+    species_col = species_col,
+    group_vars = group_vars
+  ) %>%
+    dplyr::filter(Rank <= top_n) %>%
+    dplyr::select(
+      dplyr::all_of(group_vars),
+      Species,
+      Rank
+    )
+  
+  overall_hours <- working_data %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(c(group_vars, "Hour")))
+    ) %>%
+    dplyr::summarise(
+      Overall_detections = dplyr::n(),
+      .groups = "drop"
+    ) %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(group_vars))
+    ) %>%
+    dplyr::mutate(
+      Overall_percentage = Overall_detections /
+        sum(Overall_detections) * 100
+    ) %>%
+    dplyr::ungroup()
+  
+  species_hours <- working_data %>%
+    dplyr::filter(!is.na(Species)) %>%
+    dplyr::semi_join(
+      top_species,
+      by = c(group_vars, "Species")
+    ) %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(c(group_vars, "Species", "Hour")))
+    ) %>%
+    dplyr::summarise(
+      Species_detections = dplyr::n(),
+      .groups = "drop"
+    ) %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(c(group_vars, "Species")))
+    ) %>%
+    dplyr::mutate(
+      Species_percentage = Species_detections /
+        sum(Species_detections) * 100
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::left_join(
+      top_species,
+      by = c(group_vars, "Species")
+    )
+  
+  hourly_comparison <- species_hours %>%
+    dplyr::left_join(
+      overall_hours,
+      by = c(group_vars, "Hour")
+    ) %>%
+    dplyr::select(
+      dplyr::all_of(group_vars),
+      Species,
+      Rank,
+      Hour,
+      Species_detections,
+      Species_percentage,
+      Overall_detections,
+      Overall_percentage
+    ) %>%
+    dplyr::arrange(
+      dplyr::across(dplyr::all_of(group_vars)),
+      Rank,
+      Hour
+    )
+  
+  overall_peaks <- overall_hours %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(group_vars))
+    ) %>%
+    dplyr::summarise(
+      Overall_peak_hour = Hour[which.max(Overall_detections)],
+      Overall_peak_detections = max(Overall_detections),
+      .groups = "drop"
+    )
+  
+  peak_summary <- hourly_comparison %>%
+    dplyr::group_by(
+      dplyr::across(dplyr::all_of(c(group_vars, "Species", "Rank")))
+    ) %>%
+    dplyr::summarise(
+      Species_peak_hour = Hour[which.max(Species_detections)],
+      Species_peak_detections = max(Species_detections),
+      Species_peak_percentage = max(Species_percentage),
+      Overall_percentage_at_species_peak =
+        Overall_percentage[which.max(Species_detections)],
+      .groups = "drop"
+    ) %>%
+    dplyr::left_join(
+      overall_peaks,
+      by = group_vars
+    ) %>%
+    dplyr::arrange(
+      dplyr::across(dplyr::all_of(group_vars)),
+      Rank
+    )
+  
+  return(list(
+    hourly = hourly_comparison,
+    summary = peak_summary
+  ))
+}
+
 
 
 
